@@ -18,14 +18,19 @@ export function sampleYear() {
 
     let balance = 0;
 
-    for (let i = 0; i < 12; i++) {
-        console.log(date)
-        balance += (inPerSec * secPer.Day * 30) - (outPerSec * secPer.Day * 30)
+    for (let i = 0; i < 115; i++) {
+        console.debug(date)
+        balance += (inPerSec * secPer.Day) - (outPerSec * secPer.Day)
 
         outputData.push(balance)
-        outputLabels.push(format(date, 'MM'))
+        /*let dateNum = date.getDate()
+        let dayOfYear = format(date, 'D', { useAdditionalDayOfYearTokens: true })
+        let displayDate = (dateNum % 5 === 0)
+        let outLabel = (displayDate) ? format(date, 'LLL MM') : ''
+        console.log(dateNum, displayDate, outLabel, dayOfYear)*/
+        outputLabels.push(format(date, 'MMM	d'))
         
-        date = add(date, {months: 1})
+        date = add(date, {days: 1})
     }
 
     return {data: outputData, labels: outputLabels}

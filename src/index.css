@@ -11,3 +11,21 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.chart-scroller {
+  width: 65%;
+  margin: 0 auto;
+  padding: 1%;
+  overflow: scroll;
+  border-style: solid;
+  border-color: black;
+  border-width: .1rem;
+}
+
+.chart-container-1 {
+  position: relative;
+  margin: auto;
+  height: 45vh;
+  width: 85vw;
+  overflow: scroll;
+}

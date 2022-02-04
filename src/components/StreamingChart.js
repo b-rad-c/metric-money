@@ -35,12 +35,16 @@ export const data = {
       data: sample.data,
       borderColor: 'rgb(255, 99, 132)',
       backgroundColor: 'rgba(255, 99, 132, 0.5)',
+
+      pointRadius: 0
     }
   ],
 };
 
 export const options = {
   responsive: true,
+  aspectRatio: 1,
+  maintainAspectRatio: false,
   plugins: {
     legend: {
       position: 'top',

@@ -7,9 +7,12 @@ function App() {
   return (
     <div className="App">
       <h1>Sample data</h1>
-      <div style={{height: "600px", width: "1250px"}}>
-        <StreamingChart />
+      <div className="xchart-scroller">
+        <div className="chart-container-1">
+          <StreamingChart/>
+        </div>
       </div>
+      
     </div>
   );
 }
