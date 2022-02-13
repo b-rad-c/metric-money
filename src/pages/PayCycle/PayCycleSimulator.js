@@ -1,4 +1,5 @@
 import { add, format } from 'date-fns'
+import { chunk } from 'lodash'
 
 
 export function generator(startDate, startBalance, payAmount, numDays) {
@@ -11,7 +12,7 @@ export function generator(startDate, startBalance, payAmount, numDays) {
     let label = ''
 
     for (let i = 0; i < numDays; i++) {
-        label = format(date, 'MMM d')
+        label = format(date, 'MMM d') + ', '+ format(date, 'yyyy')
 
         balanceData.push({balance: balance, label: label})
         
@@ -32,6 +33,6 @@ export function generator(startDate, startBalance, payAmount, numDays) {
         date = add(date, {days: 1})
     }
 
-    return { balanceData, months, payChecks }
+    return { balanceData, payChecks, months, bkgdIntervals: chunk(months, 2) }
 }
 

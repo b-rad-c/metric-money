@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from "react-dom";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import './index.css';
+import './index.scss';
 import App from "./App";
 import HomePage from "./pages/Home";
 import StreamingPage from "./pages/Streaming/StreamingPage"
