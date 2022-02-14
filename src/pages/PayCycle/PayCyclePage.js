@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Stack, Form, Button, ButtonGroup } from 'react-bootstrap';
+import { Stack, Form, Button, ButtonGroup, Card } from 'react-bootstrap';
 import { generator } from './PayCycleSimulator';
 import { add, format } from 'date-fns'
 import { 
@@ -12,49 +12,43 @@ import {
   ReferenceArea
 } from 'recharts';
 
+const dateTickFormatter = (label, index) => { return (label.startsWith('Jan') || index === 0) ? label : label.substring(0, label.length - 6) }
+const formatUSD = (num) => { return new Intl.NumberFormat('en-EN', { style: 'currency', currency: 'USD' }).format(num) }
+
 
 function PayCyclePage() {
   // chart config
   const chartWidth = 2000
   const chartMargin = { top: 5, right: 20, bottom: 5, left: 0 }
-  const tickFormatter = (label, index) => { return (label.startsWith('Jan') || index === 0) ? label : label.substring(0, label.length - 6) }
 
   // state variables and handlers
   const [startDate, setStartDate] = useState(new Date('Jan 01, 2021'));
-  const startDateIncDay = () => { setStartDate(add(startDate, {days: 1})) }
-  const startDateDecDay = () => { setStartDate(add(startDate, {days: -1})) }
-  const startDateIncWeek = () => { setStartDate(add(startDate, {days: 7})) }
-  const startDateDecWeek = () => { setStartDate(add(startDate, {days: -7})) }
-  const startDateIncMonth = () => { setStartDate(add(startDate, {months: 1})) }
-  const startDateDecMonth = () => { setStartDate(add(startDate, {months: -1})) }
-  const startDateIncYear = () => { setStartDate(add(startDate, {years: 1})) }
-  const startDateDecYear = () => { setStartDate(add(startDate, {years: -1})) }
+  const startDateHandler = (offset) => { setStartDate(add(startDate, offset)) }
+
+  const [salary, setSalary] = useState(42000);
+  const salaryHandler = (num) => { setSalary(salary + num) }
+  const payCheckAmount = useMemo(() => { return salary / 26 }, [salary])
 
   const [startBalance, setStartBalance] = useState(1000);
-  const startBalanceHandler = (e) => { setStartBalance(parseInt(e.target.value)) }
-
-  const [payAmount, setPayAmount] = useState(1000);
-  const payAmountHandler = (e) => { setPayAmount(parseInt(e.target.value)) }
+  const startBalanceHandler = (num) => { setStartBalance(startBalance + num) }
 
   const [showPayCheckLines, setShowPayCheckLines] = useState(true);
   const showPayCheckLinesHandler = (e) => { setShowPayCheckLines(e.target.checked) }
 
-  
-
   const chartData = useMemo(() => {
-    const payCycleData = generator(startDate, startBalance, payAmount, 370)
+    const payCycleData = generator(startDate, startBalance, payCheckAmount, 370)
     console.log(payCycleData)
     return payCycleData
-  }, [startDate, startBalance, payAmount]);
-  
-
-  
+  }, [startDate, startBalance, payCheckAmount]);
 
   return (
   <div style={{textAlign: "left"}}>
+    {
+      /* line chart */
+    }
 
     <LineChart width={chartWidth} height={400} data={chartData.balanceData} margin={chartMargin}>
-      <XAxis dataKey="label" ticks={chartData.months} tickFormatter={tickFormatter} />
+      <XAxis dataKey="label" ticks={chartData.months} tickFormatter={dateTickFormatter} interval="preserveStart" />
       <YAxis />
       <Tooltip />
       { // alternating background for each month
@@ -73,54 +67,90 @@ function PayCyclePage() {
 
     </LineChart>
 
-    <Stack direction="horizontal" gap={3}>
-      <div><Form.Check type="switch" id="payCheckSwitch" label="show paychecks" onChange={showPayCheckLinesHandler} checked={showPayCheckLines}/></div>
-    </Stack>
-
-    <hr />
-
-    <Stack direction="vertical" gap={3}>
-      <div><strong>start date</strong></div>
-      <div>
-        <Stack direction="horizontal" gap={3}>
-          <Button onClick={startDateDecMonth}>-</Button>
-          {format(startDate, 'MMMM')}
-          <Button onClick={startDateIncMonth}>+</Button>
-        </Stack>
-      </div>
-      <div>
-        <Stack direction="horizontal" gap={3}>
-          <ButtonGroup>
-            <Button onClick={startDateDecWeek}>-7</Button>
-            <Button onClick={startDateDecDay}>-1</Button>
-          </ButtonGroup>
-          {format(startDate, 'do')}
-          <ButtonGroup>
-            <Button onClick={startDateIncDay}>+1</Button>
-            <Button onClick={startDateIncWeek}>+7</Button>
-          </ButtonGroup>
-        </Stack>
-      </div>
-      <div>
-        <Stack direction="horizontal" gap={3}>
-          <Button onClick={startDateDecYear}>-</Button>
-          {format(startDate, 'yyyy')}
-          <Button onClick={startDateIncYear}>+</Button>
-        </Stack>
-      </div>
-    </Stack>
-
-    <hr />
-
-    <Stack direction="vertical" gap={3}>
-      <div>start balance: <input type="number" value={startBalance} onChange={startBalanceHandler} step={100} /></div>
-      <div>pay amount: <input type="number" value={payAmount} onChange={payAmountHandler} step={100} /></div>
-    </Stack>
-
+    {
+      /* inputs */
+    }
     
-    
-    
-    
+    <Card style={{ width: '18rem' }}>
+      <Card.Body>
+        <Card.Title className="center-text">Start date</Card.Title>
+        <Card.Text>
+          <Stack direction="vertical" gap={3}>
+            <div className="center-margin">
+              <Stack direction="horizontal" gap={3}>
+                <Button onClick={() => { startDateHandler({months: -1}) }}>-</Button>
+                {format(startDate, 'MMMM')}
+                <Button onClick={() => { startDateHandler({months: 1}) }}>+</Button>
+              </Stack>
+            </div>
+            <div className="center-margin">
+              <Stack direction="horizontal" gap={3}>
+                <ButtonGroup>
+                  <Button onClick={() => { startDateHandler({days: -7}) }}>-7</Button>
+                  <Button onClick={() => { startDateHandler({days: -1}) }}>-1</Button>
+                </ButtonGroup>
+                {format(startDate, 'do')}
+                <ButtonGroup>
+                  <Button onClick={() => { startDateHandler({days: 1}) }}>+1</Button>
+                  <Button onClick={() => { startDateHandler({days: 7}) }}>+7</Button>
+                </ButtonGroup>
+              </Stack>
+            </div>
+            <div className="center-margin">
+              <Stack direction="horizontal" gap={3}>
+                <Button onClick={() => { startDateHandler({years: -1}) }}>-</Button>
+                {format(startDate, 'yyyy')}
+                <Button onClick={() => { startDateHandler({years: 1}) }}>+</Button>
+              </Stack>
+            </div>
+          </Stack>
+        </Card.Text>
+      </Card.Body>
+    </Card>
+
+
+    <Card style={{ width: '25rem' }}>
+      <Card.Body>
+        <Card.Title className="center-text">Salary</Card.Title>
+        <Card.Text className="center-margin">
+          <Stack direction="vertical" gap={3}>
+
+            <strong>annual salary</strong>
+            <div className="center-margin">
+              <Stack direction="horizontal" gap={3}>
+                <ButtonGroup>
+                  <Button onClick={() => { salaryHandler(-1000) }}>-$1k</Button>
+                  <Button onClick={() => { salaryHandler(-100) }}>-$100</Button>
+                </ButtonGroup>
+                {formatUSD(salary)}
+                <ButtonGroup>
+                  <Button onClick={() => { salaryHandler(100) }}>$100</Button>
+                  <Button onClick={() => { salaryHandler(1000) }}>$1k</Button>
+                </ButtonGroup>
+              </Stack>
+            </div>
+
+            <strong>start balance</strong>
+            <div className="center-margin">
+              <Stack direction="horizontal" gap={3}>
+                <ButtonGroup>
+                  <Button onClick={() => { startBalanceHandler(-1000) }}>-$1k</Button>
+                  <Button onClick={() => { startBalanceHandler(-100) }}>-$100</Button>
+                </ButtonGroup>
+                {formatUSD(startBalance)}
+                <ButtonGroup>
+                  <Button onClick={() => { startBalanceHandler(100) }}>$100</Button>
+                  <Button onClick={() => { startBalanceHandler(1000) }}>$1k</Button>
+                </ButtonGroup>
+              </Stack>
+            </div>
+            <div className="center-margin">
+              <Form.Check type="switch" id="payCheckSwitch" label="show paycheck markers" onChange={showPayCheckLinesHandler} checked={showPayCheckLines}/>
+            </div>
+          </Stack>
+        </Card.Text>
+      </Card.Body>
+    </Card>
     
   </div>
   );
