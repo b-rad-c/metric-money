@@ -7,6 +7,8 @@ import HomePage from "./pages/Home";
 import StreamingPage from "./pages/Streaming/StreamingPage"
 import PayCyclePage from "./pages/PayCycle/PayCyclePage"
 
+export const stackGap = 3
+
 const rootElement = document.getElementById("root");
 render(
   <BrowserRouter>
