@@ -2,7 +2,7 @@ import { format } from 'date-fns'
 import { Stack, Button, ButtonGroup, Card, Form } from 'react-bootstrap';
 import { stackGap } from '../../index';
 
-const formatUSD = (num) => { return new Intl.NumberFormat('en-EN', { style: 'currency', currency: 'USD' }).format(num) }
+export function formatUSD (num) { return new Intl.NumberFormat('en-EN', { style: 'currency', currency: 'USD' }).format(num) }
 
 export function StartDateInput (props) {
 return (
@@ -105,8 +105,26 @@ return (
         </Stack>
 
         <strong>electric</strong>
+        <Stack direction="horizontal" gap={stackGap}>
+            <ButtonGroup size="sm">
+                <Button onClick={() => { props.electricCostHandler(-15) }}>-$15</Button>
+            </ButtonGroup>
+            {formatUSD(props.electricCost)}
+            <ButtonGroup size="sm">
+                <Button onClick={() => { props.electricCostHandler(15) }}>+$15</Button>
+            </ButtonGroup>
+        </Stack>
+
         <strong>water</strong>
-        <strong>internet</strong>
+        <Stack direction="horizontal" gap={stackGap}>
+            <ButtonGroup size="sm">
+                <Button onClick={() => { props.waterCostHandler(-15) }}>-$15</Button>
+            </ButtonGroup>
+            {formatUSD(props.waterCost)}
+            <ButtonGroup size="sm">
+                <Button onClick={() => { props.waterCostHandler(15) }}>+$15</Button>
+            </ButtonGroup>
+        </Stack>
         
         </Stack>
     </Card.Body>
