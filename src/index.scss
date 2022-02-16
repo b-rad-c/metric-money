@@ -11,35 +11,16 @@ body {
       sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-  }
-  
-  code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-      monospace;
-  }
-  
-  .chart-scroller {
-    width: 65%;
-    margin: 0 auto;
-    padding: 1%;
-    overflow: scroll;
-    border-style: solid;
-    border-color: black;
-    border-width: .1rem;
-  }
-  
-  .chart-container-1 {
-    position: relative;
-    margin: auto;
-    height: 45vh;
-    width: 85vw;
-    overflow: scroll;
-  }
+}
 
-  .center-margin {
-    margin: 0 auto;
-  }
+.metric-money-app h1 {
+  text-align: center;
+}
 
-  .center-text {
-      text-align: center;
-  }
+.center-margin {
+margin: 0 auto;
+}
+
+.center-text {
+    text-align: center;
+}

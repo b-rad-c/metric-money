@@ -56,7 +56,6 @@ export class TransactionList {
 
     dailyTotal(date) {
         const today = this.lookup[date]
-        console.log('today', today)
         if(typeof today === 'undefined') {
             return 0
         }else{

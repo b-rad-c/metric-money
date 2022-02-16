@@ -1,9 +1,8 @@
 import React, { useState, useMemo } from 'react';
 import { Stack, Form } from 'react-bootstrap';
-import { Bill, BillList, generator, Transaction, TransactionList } from './PayCycleSimulator';
-import { StartDateInput, SalaryInput, BillsInput, formatUSD } from './PayCheckInputs'
+import { Bill, BillList, generator, Transaction, TransactionList } from '../DataGenerator';
+import { StartDateInput, SalaryInput, BillsInput, formatUSD } from './MetricMoneyForms'
 import { add } from 'date-fns'
-import { stackGap } from '../../index';
 import { 
   Area,
   AreaChart, 
@@ -14,11 +13,9 @@ import {
   ReferenceArea
 } from 'recharts';
 
-function PayCyclePage() {
+export const stackGap = 3
 
-  // chart config
-  const chartWidth = 1750
-  const chartMargin = { top: 20, right: 0, bottom: 20, left: 30 }
+function MetricMoneyChart() {
 
   //
   // state variables and handlers
@@ -70,13 +67,19 @@ function PayCyclePage() {
 
 
   //
-  // chart data and config
+  // chart data
   //
 
   const chartData = useMemo(() => {
-    console.log(unexpectedTrans)
     return generator(startDate, startBalance, useStreaming, salary, bills, unexpectedTrans, 365)
   }, [startDate, startBalance, useStreaming, salary, bills, unexpectedTrans]);
+
+  //
+  // chart config
+  //
+  
+  const chartWidth = 1750
+  const chartMargin = { top: 20, right: 0, bottom: 20, left: 30 }
 
   const dateTickFormatter = (label, index) => { return (label.startsWith('Jan') || index === 0) ? label : label.substring(0, label.length - 6) }
 
@@ -94,10 +97,16 @@ function PayCyclePage() {
 
   }, [chartData])
 
+  //
+  // render
+  //
+
   return (
-  <div style={{textAlign: "left"}}>
+  <div>
     {
-      /* line chart */
+      // 
+      // line chart 
+      //
     }
 
     <AreaChart width={chartWidth} height={400} data={chartData.balanceData} margin={chartMargin} onClick={unexpectedHandler}>
@@ -128,7 +137,9 @@ function PayCyclePage() {
     </AreaChart>
 
     {
-      /* inputs */
+      //
+      // inputs 
+      //
     }
 
     final balance: { formatUSD(chartData.finalBalance) }<br />
@@ -163,4 +174,4 @@ function PayCyclePage() {
   );
 }
 
-export default PayCyclePage
+export default MetricMoneyChart

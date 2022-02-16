@@ -1,6 +1,6 @@
 import { format } from 'date-fns'
 import { Stack, Button, ButtonGroup, Card, Form } from 'react-bootstrap';
-import { stackGap } from '../../index';
+import { stackGap } from './MetricMoneyChart.js';
 
 export function formatUSD (num) { return new Intl.NumberFormat('en-EN', { style: 'currency', currency: 'USD' }).format(num) }
 
