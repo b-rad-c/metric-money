@@ -1,8 +1,12 @@
 import { format } from 'date-fns'
-import { Stack, Button, ButtonGroup, Card, Form } from 'react-bootstrap';
-import { stackGap } from './MetricMoneyChart.js';
+import { Stack, Button, ButtonGroup, Card, Form, Container, Row, Col } from 'react-bootstrap';
+import { stackGap } from './Chart.js';
 
 export function formatUSD (num) { return new Intl.NumberFormat('en-EN', { style: 'currency', currency: 'USD' }).format(num) }
+export function formatRate (rate) { 
+    const num = rate * 100
+    return num.toFixed(1) + '%' 
+}
 
 export function StartDateInput (props) {
 return (
@@ -93,40 +97,103 @@ return (
         <Card.Title className="center-text">Bills</Card.Title>
         <Stack direction="vertical" gap={stackGap}>
     
-        <strong>housing</strong>
-        <Stack direction="horizontal" gap={stackGap}>
-            <ButtonGroup size="sm">
-                <Button onClick={() => { props.housingCostHandler(-50) }}>-$50</Button>
-            </ButtonGroup>
-            {formatUSD(props.housingCost)}
-            <ButtonGroup size="sm">
-                <Button onClick={() => { props.housingCostHandler(50) }}>+$50</Button>
-            </ButtonGroup>
-        </Stack>
+            <strong>housing</strong>
+            <Stack direction="horizontal" gap={stackGap}>
+                <ButtonGroup size="sm">
+                    <Button onClick={() => { props.housingCostHandler(-50) }}>-$50</Button>
+                </ButtonGroup>
+                {formatUSD(props.housingCost)}
+                <ButtonGroup size="sm">
+                    <Button onClick={() => { props.housingCostHandler(50) }}>+$50</Button>
+                </ButtonGroup>
+            </Stack>
 
-        <strong>electric</strong>
-        <Stack direction="horizontal" gap={stackGap}>
-            <ButtonGroup size="sm">
-                <Button onClick={() => { props.electricCostHandler(-15) }}>-$15</Button>
-            </ButtonGroup>
-            {formatUSD(props.electricCost)}
-            <ButtonGroup size="sm">
-                <Button onClick={() => { props.electricCostHandler(15) }}>+$15</Button>
-            </ButtonGroup>
-        </Stack>
+            <strong>electric</strong>
+            <Stack direction="horizontal" gap={stackGap}>
+                <ButtonGroup size="sm">
+                    <Button onClick={() => { props.electricCostHandler(-15) }}>-$15</Button>
+                </ButtonGroup>
+                {formatUSD(props.electricCost)}
+                <ButtonGroup size="sm">
+                    <Button onClick={() => { props.electricCostHandler(15) }}>+$15</Button>
+                </ButtonGroup>
+            </Stack>
 
-        <strong>water</strong>
-        <Stack direction="horizontal" gap={stackGap}>
-            <ButtonGroup size="sm">
-                <Button onClick={() => { props.waterCostHandler(-15) }}>-$15</Button>
-            </ButtonGroup>
-            {formatUSD(props.waterCost)}
-            <ButtonGroup size="sm">
-                <Button onClick={() => { props.waterCostHandler(15) }}>+$15</Button>
-            </ButtonGroup>
-        </Stack>
+            <strong>water</strong>
+            <Stack direction="horizontal" gap={stackGap}>
+                <ButtonGroup size="sm">
+                    <Button onClick={() => { props.waterCostHandler(-15) }}>-$15</Button>
+                </ButtonGroup>
+                {formatUSD(props.waterCost)}
+                <ButtonGroup size="sm">
+                    <Button onClick={() => { props.waterCostHandler(15) }}>+$15</Button>
+                </ButtonGroup>
+            </Stack>
         
         </Stack>
+    </Card.Body>
+</Card>
+)
+}
+
+export function FinanceInput (props) {
+return (
+<Card style={{ width: '25rem' }}>
+    <Card.Body>
+        <Card.Title className="center-text">Finance</Card.Title>
+        <Form.Switch label="Use DeFi" onChange={props.useDeFiHandler} checked={props.useDefi}/>
+        <Form.Check type="switch" id="streamingSwitch" label="Use streaming" onChange={props.useStreamingHandler} checked={props.useStreaming}/>
+    </Card.Body>
+</Card>
+)
+}
+
+export function TransactionWidget (props) {
+return (
+<Card style={{ width: '25rem' }}>
+    <Card.Body>
+        <Card.Title className="center-text">Transactions</Card.Title>
+        <Container>
+            {
+                props.transactions.items.map((trans, index) => (
+                    <Row key={index}>
+                        <Col>{trans.date.substring(0, trans.date.length - 6)}</Col>
+                        <Col>{formatUSD(trans.amount)}</Col>
+                        <Col>{trans.name}</Col>
+                    </Row>
+                ))
+            }
+        </Container>
+    </Card.Body>
+</Card>
+)
+}
+
+export function ResultWidget (props) {
+return (
+<Card style={{ width: '25rem' }}>
+    <Card.Body>
+        <Card.Title className="center-text">Results</Card.Title>
+        <Container>
+            <Row>
+                <Col>final balance:</Col><Col>{formatUSD(props.finalBalance)}</Col>
+            </Row>
+            <Row>
+                <Col>total paychecks:</Col><Col>{ props.payChecks.length }</Col>
+            </Row>
+            <Row>
+                <Col>savings rate:</Col><Col>{ formatRate(props.savingsRate) }</Col>
+            </Row>
+            <Row>
+                <Col>interest earned:</Col><Col>{ formatUSD(props.interestEarned) }</Col>
+            </Row>
+            <Row>
+                <Col>credit rate:</Col><Col>{ formatRate(props.creditRate) }</Col>
+            </Row>
+            <Row>
+                <Col>interest paid:</Col><Col>{ formatUSD(props.interestPaid) }</Col>
+            </Row>
+        </Container>
     </Card.Body>
 </Card>
 )

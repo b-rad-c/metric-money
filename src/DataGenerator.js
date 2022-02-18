@@ -43,7 +43,7 @@ export class Transaction {
 
 export class TransactionList {
     constructor(transactions) {
-        this.transactions = transactions
+        this.items = transactions
         this.lookup = {}
         transactions.forEach((t) => {
             if (typeof this.lookup[t.date] === 'undefined') {
@@ -76,53 +76,116 @@ function monthlyToStreaming(num) {
     return (num * 12) / secondsPerYear
 }
 
+export class Generator {
+    constructor() {
+        this.startBalance = 0
+        this.salary = 0
 
-export function generator(startDate, startBalance, useStreaming, salary, bills, transactions, numDays) {
-    // payrate is calculated daily for streaming and bi weekly otherwise
-    const payRate = (useStreaming) ? annualToStreaming(salary) * secondsPerDay : salary / 26
-    let date = startDate
-    let balance = startBalance
-    let balanceData = []
-    let months = []
-    let payChecks = []
-    let isPayWeek = true
-    let label = ''
-    let dayOfMonth = 0
+        this.useStreaming = false
+        this.useDeFi = false
 
-    for (let i = 0; i < numDays; i++) {
-        label = format(date, 'MMM d') + ', '+ format(date, 'yyyy')
-        dayOfMonth = date.getDate()
+        this.tradFiCreditRate = .17
+        this.tradFiSavingsRate = .007
+        this.deFiCreditRate = .1
+        this.deFiSavingsRate = .10
         
-        // salary
-        if(useStreaming) {
-            balance += payRate
-        }else if(date.getDay() === 5) {
-            if(isPayWeek) {
-                balance += payRate
-                payChecks.push(label)
-            }
-            isPayWeek = !isPayWeek
-        }
-        
-        // subtract today's bills
-        if(useStreaming) {
-            balance -= bills.dailyTotalStreaming
-        }else{
-            balance -= bills.dailyTotalNonStreaming(dayOfMonth)
-        }
-        
-        balance -= transactions.dailyTotal(label)
-        
-        // store ticks for the first of the month
-        if(dayOfMonth === 1) {
-            months.push(label)
-        }
 
-        balanceData.push({balance: balance, label: label})
-        
-        date = add(date, {days: 1})
+        this.bills = []
+        this.transactions = []
     }
 
-    return { balanceData, payChecks, months, bkgdIntervals: chunk(months, 2), finalBalance: balance }
+    configSalary(startBalance, salary) {
+        this.startBalance = startBalance
+        this.salary = salary
+    }
+
+    configFinance(useStreaming, useDeFi) {
+        this.useStreaming = useStreaming
+        this.useDeFi = useDeFi
+    }
+
+    expenses(bills, transactions) {
+        this.bills = bills 
+        this.transactions = transactions
+    }
+
+    run(startDate, numDays) {
+        // payrate is calculated daily for streaming and bi weekly otherwise
+        const payRate = (this.useStreaming) ? annualToStreaming(this.salary) * secondsPerDay : this.salary / 26
+        const result = new GeneratorResult()
+
+        result.creditRate = this.useDeFi ? this.deFiCreditRate : this.tradFiCreditRate
+        result.savingsRate = this.useDeFi ? this.deFiSavingsRate : this.tradFiSavingsRate
+
+        let date = startDate
+        let balance = this.startBalance
+        let isPayWeek = true
+
+        for (let i = 0; i < numDays; i++) {
+            let label = format(date, 'MMM d') + ', '+ format(date, 'yyyy')
+            let dayOfMonth = date.getDate()
+
+            if (balance < 0) {
+                let charge = Math.abs(balance) * result.creditRate / 365
+                result.interestPaid += charge
+                balance -= charge
+            }else{
+                let earned = balance * result.savingsRate / 365
+                result.interestEarned += earned
+                balance += earned
+            }
+            
+            // salary
+            if(this.useStreaming) {
+                balance += payRate
+            }else if(date.getDay() === 5) {
+                if(isPayWeek) {
+                    balance += payRate
+                    result.payChecks.push(label)
+                }
+                isPayWeek = !isPayWeek
+            }
+            
+            // subtract today's bills
+            if(this.useStreaming) {
+                balance -= this.bills.dailyTotalStreaming
+            }else{
+                balance -= this.bills.dailyTotalNonStreaming(dayOfMonth)
+            }
+            
+            balance -= this.transactions.dailyTotal(label)
+            
+            // store ticks for the first of the month
+            if(dayOfMonth === 1) {
+                result.months.push(label)
+            }
+
+            result.balanceData.push({balance: balance, label: label})
+            
+            date = add(date, {days: 1})
+        }
+
+        result.finalBalance = balance
+        result.finalize()
+        return result
+    }
 }
 
+
+class GeneratorResult {
+    constructor() {
+        this.balanceData = []
+        this.payChecks = []
+        this.months = []
+        this.finalBalance = 0.0
+        this.creditRate = 0.0
+        this.interestPaid = 0.0
+        this.savingsRate = 0.0
+        this.interestEarned = 0.0
+        this.bkgdIntervals = []
+    }
+
+    finalize() {
+        this.bkgdIntervals = chunk(this.months, 2)
+    }
+}

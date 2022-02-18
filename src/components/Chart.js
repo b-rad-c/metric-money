@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
-import { Stack, Form } from 'react-bootstrap';
-import { Bill, BillList, generator, Transaction, TransactionList } from '../DataGenerator';
-import { StartDateInput, SalaryInput, BillsInput, formatUSD } from './MetricMoneyForms'
+import { Stack } from 'react-bootstrap';
+import { Bill, BillList, Generator, Transaction, TransactionList } from '../DataGenerator';
+import { StartDateInput, SalaryInput, BillsInput, FinanceInput, formatUSD, TransactionWidget, ResultWidget } from './Widgets'
 import { add } from 'date-fns'
 import { 
   Area,
@@ -24,6 +24,9 @@ function MetricMoneyChart() {
   const [useStreaming, setUseStreaming] = useState(false);
   const useStreamingHandler = (e) => { setUseStreaming(e.target.checked) }
 
+  const [useDeFi, setUseDeFi] = useState(false);
+  const useDeFiHandler = (e) => { setUseDeFi(e.target.checked); }
+
   const [startDate, setStartDate] = useState(new Date('Jan 01, 2022'));
   const startDateHandler = (offset) => { setStartDate(add(startDate, offset)) }
 
@@ -41,7 +44,7 @@ function MetricMoneyChart() {
 
   function unexpectedHandler(e) {
     const newTrans = new Transaction('UNEXPECTED EXPENSE', 500, e.activeLabel)
-    const newList = new TransactionList(unexpectedTrans.transactions.concat([newTrans]))
+    const newList = new TransactionList(unexpectedTrans.items.concat([newTrans]))
     setUnexpectedTrans(newList)
   }
 
@@ -71,8 +74,12 @@ function MetricMoneyChart() {
   //
 
   const chartData = useMemo(() => {
-    return generator(startDate, startBalance, useStreaming, salary, bills, unexpectedTrans, 365)
-  }, [startDate, startBalance, useStreaming, salary, bills, unexpectedTrans]);
+    const generator = new Generator()
+    generator.configSalary(startBalance, salary)
+    generator.configFinance(useStreaming, useDeFi)
+    generator.expenses(bills, unexpectedTrans)
+    return generator.run(startDate, 700)
+  }, [startDate, startBalance, useStreaming, useDeFi, salary, bills, unexpectedTrans]);
 
   //
   // chart config
@@ -142,15 +149,26 @@ function MetricMoneyChart() {
       //
     }
 
-    final balance: { formatUSD(chartData.finalBalance) }<br />
-    total paychecks: { chartData.payChecks.length }
-
-    <Form.Check type="switch" id="streamingSwitch" label="streaming" onChange={useStreamingHandler} checked={useStreaming}/>
+    <ResultWidget
+      finalBalance={chartData.finalBalance}
+      payChecks={chartData.payChecks}
+      interestPaid={chartData.interestPaid}
+      interestEarned={chartData.interestEarned}
+      savingsRate={chartData.savingsRate}
+      creditRate={chartData.creditRate}
+      />
 
     <Stack direction="horizontal" gap={stackGap}>
       <StartDateInput 
         startDateHandler={startDateHandler} 
         startDate={startDate} />
+
+      <FinanceInput
+        useStreaming={useStreaming}
+        useStreamingHandler={useStreamingHandler}
+        useDeFi={useDeFi}
+        useDeFiHandler={useDeFiHandler}
+        />
 
       <SalaryInput 
         salary={salary} 
@@ -160,6 +178,8 @@ function MetricMoneyChart() {
         showPayCheckLines={showPayCheckLines} 
         showPayCheckLinesHandler={showPayCheckLinesHandler} />
 
+        
+
       <BillsInput
         housingCost={housingCost}
         housingCostHandler={housingCostHandler} 
@@ -167,6 +187,10 @@ function MetricMoneyChart() {
         electricCostHandler={electricCostHandler}
         waterCost={waterCost}
         waterCostHandler={waterCostHandler} />
+
+      <TransactionWidget 
+        transactions={unexpectedTrans}
+      />
 
     </Stack>
     

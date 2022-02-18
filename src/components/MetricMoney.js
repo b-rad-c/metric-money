@@ -1,4 +1,4 @@
-import MetricMoneyChart from './MetricMoneyChart.js'
+import MetricMoneyChart from './Chart.js'
 
 function MetricMoney() {
 
