@@ -1,4 +1,4 @@
-import { add, format } from 'date-fns'
+import { add, format, eachDayOfInterval } from 'date-fns'
 import { chunk, reduce } from 'lodash'
 
 export class Bill {
@@ -89,6 +89,7 @@ export class Generator {
         this.deFiCreditRate = .1
         this.deFiSavingsRate = .10
         
+        this.fitToScreen = false
 
         this.bills = []
         this.transactions = []
@@ -104,12 +105,16 @@ export class Generator {
         this.useDeFi = useDeFi
     }
 
+    configChart(fitToScreen) {
+        this.fitToScreen = fitToScreen
+    }
+
     expenses(bills, transactions) {
         this.bills = bills 
         this.transactions = transactions
     }
 
-    run(startDate, numDays) {
+    run(startDate, duration) {
         // payrate is calculated daily for streaming and bi weekly otherwise
         const payRate = (this.useStreaming) ? annualToStreaming(this.salary) * secondsPerDay : this.salary / 26
         const result = new GeneratorResult()
@@ -117,13 +122,14 @@ export class Generator {
         result.creditRate = this.useDeFi ? this.deFiCreditRate : this.tradFiCreditRate
         result.savingsRate = this.useDeFi ? this.deFiSavingsRate : this.tradFiSavingsRate
 
-        let date = startDate
         let balance = this.startBalance
         let isPayWeek = true
 
-        for (let i = 0; i < numDays; i++) {
-            let label = format(date, 'MMM d') + ', '+ format(date, 'yyyy')
+        const daysInSimulation = eachDayOfInterval({start: startDate, end: add(startDate, duration)})
+        daysInSimulation.forEach((date) => {
+            let label = format(date, 'MMM d, yyyy')
             let dayOfMonth = date.getDate()
+            let month = date.getMonth()
 
             if (balance < 0) {
                 let charge = Math.abs(balance) * result.creditRate / 365
@@ -155,15 +161,29 @@ export class Generator {
             
             balance -= this.transactions.dailyTotal(label)
             
-            // store ticks for the first of the month
+            // determine which ticks to place on x axis,
+            // choose dynamically based on length of simulation to prevent crowding
+            // do not use default determinations by recharts to make sure important dates are chosen
             if(dayOfMonth === 1) {
-                result.months.push(label)
+                if(duration.years === 1 || !this.fitToScreen) {
+                    // show every month if duration is 1 year
+                    result.months.push(label)
+    
+                }else if(duration.years < 5 && [0, 3, 6, 9].indexOf(month) !== -1) {
+                    // show first month of every quarter if duration is 2-4 years
+                    result.months.push(label)
+                }else if(duration.years >= 5 && duration.years < 10 && (month === 0 || month === 6)) {
+                    // show jan and july of every year if duration is 5-9 years
+                    result.months.push(label)
+                }else if(duration.years === 10 && month === 0) {
+                    // only show jan and july of every year if duration is 10 years
+                    result.months.push(label)
+                }
             }
+            
 
             result.balanceData.push({balance: balance, label: label})
-            
-            date = add(date, {days: 1})
-        }
+        })
 
         result.finalBalance = balance
         result.finalize()

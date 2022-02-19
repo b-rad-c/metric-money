@@ -1,8 +1,18 @@
 import React, { useState, useMemo } from 'react';
-import { Stack } from 'react-bootstrap';
-import { Bill, BillList, Generator, Transaction, TransactionList } from '../DataGenerator';
-import { StartDateInput, SalaryInput, BillsInput, FinanceInput, formatUSD, TransactionWidget, ResultWidget } from './Widgets'
+import { Container, Row, Col } from 'react-bootstrap';
 import { add } from 'date-fns'
+import { Bill, BillList, Generator, Transaction, TransactionList } from '../DataGenerator';
+import { 
+  SimulationInput, 
+  SalaryInput,
+  BillsInput, 
+  FinanceInput, 
+  formatUSD, 
+  ExpensesWidget, 
+  ResultWidget,
+  GraphOptions 
+} from './Widgets'
+
 import { 
   Area,
   AreaChart, 
@@ -10,7 +20,8 @@ import {
   YAxis, 
   Tooltip, 
   ReferenceLine,  
-  ReferenceArea
+  ReferenceArea,
+  ResponsiveContainer
 } from 'recharts';
 
 export const stackGap = 3
@@ -30,6 +41,9 @@ function MetricMoneyChart() {
   const [startDate, setStartDate] = useState(new Date('Jan 01, 2022'));
   const startDateHandler = (offset) => { setStartDate(add(startDate, offset)) }
 
+  const [simDuration, setSimDuration] = useState({years: 1});
+  const simDurationHandler = (years) => { setSimDuration({years: years}) }
+
   const [salary, setSalary] = useState(18000);
   const salaryHandler = (num) => { setSalary(salary + num) }
 
@@ -39,12 +53,18 @@ function MetricMoneyChart() {
   const [showPayCheckLines, setShowPayCheckLines] = useState(true);
   const showPayCheckLinesHandler = (e) => { setShowPayCheckLines(e.target.checked) }
 
+  const [fitToScreen, setFitToScreen] = useState(false);
+  const fitToScreenHandler = (e) => { setFitToScreen(e.target.checked) }
+
   // unexpected transactions
   const [unexpectedTrans, setUnexpectedTrans] = useState(new TransactionList([]));
 
   function unexpectedHandler(e) {
+    console.log(e)
+    console.log(e.activeLabel)
     const newTrans = new Transaction('UNEXPECTED EXPENSE', 500, e.activeLabel)
     const newList = new TransactionList(unexpectedTrans.items.concat([newTrans]))
+    console.log(newTrans)
     setUnexpectedTrans(newList)
   }
 
@@ -77,18 +97,25 @@ function MetricMoneyChart() {
     const generator = new Generator()
     generator.configSalary(startBalance, salary)
     generator.configFinance(useStreaming, useDeFi)
+    generator.configChart(fitToScreen)
     generator.expenses(bills, unexpectedTrans)
-    return generator.run(startDate, 700)
-  }, [startDate, startBalance, useStreaming, useDeFi, salary, bills, unexpectedTrans]);
+    return generator.run(startDate, simDuration)
+  }, [startDate, simDuration, startBalance, useStreaming, useDeFi, fitToScreen, salary, bills, unexpectedTrans]);
 
   //
   // chart config
   //
   
-  const chartWidth = 1750
-  const chartMargin = { top: 20, right: 0, bottom: 20, left: 30 }
+  const chartWidth = useMemo(() => { 
+    if(!fitToScreen && simDuration.years > 1) { 
+      return 1500 * simDuration.years 
+    } else {
+       return "100%" 
+      } 
+  }, [fitToScreen, simDuration])
+  const chartMargin = { top: 20, right: 40, bottom: 20, left: 40 }
 
-  const dateTickFormatter = (label, index) => { return (label.startsWith('Jan') || index === 0) ? label : label.substring(0, label.length - 6) }
+  const dateTickFormatter = (label, index) => { return (label.startsWith('Jan') || index === 0) ? label : label.substring(0, label.length - 8) }
 
   const gradientOffset = useMemo(() => { // used to color area chart green or red
     const dataMax = Math.max(...chartData.balanceData.map((i) => i.balance));
@@ -115,33 +142,37 @@ function MetricMoneyChart() {
       // line chart 
       //
     }
+    <div className="center-margin" style={{width: "100%", overflowX: "scroll"}}>
 
-    <AreaChart width={chartWidth} height={400} data={chartData.balanceData} margin={chartMargin} onClick={unexpectedHandler}>
-      <XAxis dataKey="label" ticks={chartData.months} tickFormatter={dateTickFormatter} interval="preserveStart" tickMargin={10} />
-      <YAxis tickFormatter={(value) => formatUSD(value)} />
-      <Tooltip formatter={(value, name) => [formatUSD(value), name]} />
-      { // alternating background for each month
-        chartData.bkgdIntervals.map((bkgdInt, index) => (
-          <ReferenceArea key={'bkgd-' + index} x1={bkgdInt[0]} x2={bkgdInt[1]} stroke="none" strokeOpacity={0.3} />
-        ))
-      }
+      <ResponsiveContainer className="center-margin" width={chartWidth} height={400}>
+        <AreaChart data={chartData.balanceData} margin={chartMargin} onClick={unexpectedHandler}>
+          <XAxis dataKey="label" ticks={chartData.months} tickFormatter={dateTickFormatter} interval="preserveEnd" tickMargin={10} minTickGap={5} angle={0} />
+          <YAxis tickFormatter={(value) => formatUSD(value)} />
+          <Tooltip formatter={(value, name) => [formatUSD(value), name]} />
+          { // alternating background for each month
+            chartData.bkgdIntervals.map((bkgdInt, index) => (
+              <ReferenceArea key={'bkgd-' + index} x1={bkgdInt[0]} x2={bkgdInt[1]} stroke="none" strokeOpacity={0.3} />
+            ))
+          }
 
-      { // pay check reference lines
-        showPayCheckLines && chartData.payChecks.map((payDate, index) => (
-          <ReferenceLine key={index} x={payDate} stroke="green" strokeDasharray="0" strokeWidth={2} />
-        ))
-      }
+          { // pay check reference lines
+            showPayCheckLines && chartData.payChecks.map((payDate, index) => (
+              <ReferenceLine key={index} x={payDate} stroke="green" strokeDasharray="0" strokeWidth={2} />
+            ))
+          }
 
-      <defs>
-        <linearGradient id="splitColor" x1="0" y1="0" x2="0" y2="1">
-          <stop offset={gradientOffset} stopColor="green" stopOpacity={1} />
-          <stop offset={gradientOffset} stopColor="red" stopOpacity={1} />
-        </linearGradient>
-      </defs>
-      
-      <Area type="stepAfter" dataKey="balance" stroke="black" strokeWidth={3} dot={false} isAnimationActive={false} fill="url(#splitColor)"/>
+          <defs>
+            <linearGradient id="splitColor" x1="0" y1="0" x2="0" y2="1">
+              <stop offset={gradientOffset} stopColor="green" stopOpacity={1} />
+              <stop offset={gradientOffset} stopColor="red" stopOpacity={1} />
+            </linearGradient>
+          </defs>
+          
+          <Area type="stepAfter" dataKey="balance" stroke="black" strokeWidth={3} dot={false} isAnimationActive={false} fill="url(#splitColor)"/>
+        </AreaChart>
+      </ResponsiveContainer>
 
-    </AreaChart>
+    </div>
 
     {
       //
@@ -149,51 +180,68 @@ function MetricMoneyChart() {
       //
     }
 
-    <ResultWidget
-      finalBalance={chartData.finalBalance}
-      payChecks={chartData.payChecks}
-      interestPaid={chartData.interestPaid}
-      interestEarned={chartData.interestEarned}
-      savingsRate={chartData.savingsRate}
-      creditRate={chartData.creditRate}
-      />
-
-    <Stack direction="horizontal" gap={stackGap}>
-      <StartDateInput 
-        startDateHandler={startDateHandler} 
-        startDate={startDate} />
-
-      <FinanceInput
-        useStreaming={useStreaming}
-        useStreamingHandler={useStreamingHandler}
-        useDeFi={useDeFi}
-        useDeFiHandler={useDeFiHandler}
-        />
-
-      <SalaryInput 
-        salary={salary} 
-        salaryHandler={salaryHandler} 
-        startBalance={startBalance} 
-        startBalanceHandler={startBalanceHandler} 
-        showPayCheckLines={showPayCheckLines} 
-        showPayCheckLinesHandler={showPayCheckLinesHandler} />
-
+    <Container>
+      <Row>
+        <Col>
+          <ResultWidget
+          finalBalance={chartData.finalBalance}
+          payChecks={chartData.payChecks}
+          interestPaid={chartData.interestPaid}
+          interestEarned={chartData.interestEarned} />
+        </Col>
         
+        <Col>
+          <SimulationInput 
+          startDateHandler={startDateHandler} 
+          startDate={startDate} 
+          simDuration={simDuration}
+          simDurationHandler={simDurationHandler} />
+        </Col>
 
-      <BillsInput
-        housingCost={housingCost}
-        housingCostHandler={housingCostHandler} 
-        electricCost={electricCost}
-        electricCostHandler={electricCostHandler}
-        waterCost={waterCost}
-        waterCostHandler={waterCostHandler} />
+        <Col>
+          <GraphOptions
+          fitToScreen={fitToScreen}
+          fitToScreenHandler={fitToScreenHandler}
+          showPayCheckLines={showPayCheckLines} 
+          showPayCheckLinesHandler={showPayCheckLinesHandler} />
+        </Col>
+      </Row>
 
-      <TransactionWidget 
-        transactions={unexpectedTrans}
-      />
+      <Row>
+        <Col>
+          <FinanceInput
+          useStreaming={useStreaming}
+          useStreamingHandler={useStreamingHandler}
+          useDeFi={useDeFi}
+          useDeFiHandler={useDeFiHandler}
+          savingsRate={chartData.savingsRate}
+          creditRate={chartData.creditRate} />
+        </Col>
 
-    </Stack>
-    
+        <Col>
+          <SalaryInput 
+          salary={salary} 
+          salaryHandler={salaryHandler} 
+          startBalance={startBalance} 
+          startBalanceHandler={startBalanceHandler} />
+        </Col>
+
+        <Col>
+          <BillsInput
+          housingCost={housingCost}
+          housingCostHandler={housingCostHandler} 
+          electricCost={electricCost}
+          electricCostHandler={electricCostHandler}
+          waterCost={waterCost}
+          waterCostHandler={waterCostHandler} />
+        </Col>
+
+        <Col>
+          <ExpensesWidget 
+          transactions={unexpectedTrans} />
+        </Col>
+      </Row>
+    </Container>
   </div>
   );
 }

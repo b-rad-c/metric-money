@@ -1,4 +1,4 @@
-import { format } from 'date-fns'
+import { format, formatDuration } from 'date-fns'
 import { Stack, Button, ButtonGroup, Card, Form, Container, Row, Col } from 'react-bootstrap';
 import { stackGap } from './Chart.js';
 
@@ -8,82 +8,83 @@ export function formatRate (rate) {
     return num.toFixed(1) + '%' 
 }
 
-export function StartDateInput (props) {
+export function SimulationInput (props) {
+const simYears = props.simDuration.years
+const disableSubYear = simYears === 1
+const disableAddYear = simYears === 10
 return (
-<Card style={{ width: '18rem' }}>
-    <Card.Title className="center-text">Start date</Card.Title>
-    <Stack direction="vertical" gap={stackGap}>
-        <div className="center-margin">
-            <Stack direction="horizontal" gap={stackGap}>
-                <Button size="sm" onClick={() => { props.startDateHandler({months: -1}) }}>-</Button>
-                {format(props.startDate, 'MMMM')}
-                <Button size="sm" onClick={() => { props.startDateHandler({months: 1}) }}>+</Button>
+<Card className="center-text" style={{ width: '28rem' }}>
+    <Card.Title>Simulation</Card.Title>
+    <Card.Body>
+        <Stack direction="vertical" gap={2}>
+            <strong>start date</strong>
+            <Stack direction="horizontal" gap={0}>
+                <Stack className="center-margin" direction="horizontal" gap={1}>
+                    <Button size="sm" onClick={() => { props.startDateHandler({months: -1}) }}>-</Button>
+                    {format(props.startDate, 'MMM')}
+                    <Button size="sm" onClick={() => { props.startDateHandler({months: 1}) }}>+</Button>
+                </Stack>
+                <Stack className="center-margin" direction="horizontal" gap={1}>
+                    <ButtonGroup size="sm">
+                        <Button onClick={() => { props.startDateHandler({days: -7}) }}>-7</Button>
+                        <Button onClick={() => { props.startDateHandler({days: -1}) }}>-1</Button>
+                    </ButtonGroup>
+                    {format(props.startDate, 'do')}
+                    <ButtonGroup size="sm">
+                        <Button onClick={() => { props.startDateHandler({days: 1}) }}>+1</Button>
+                        <Button onClick={() => { props.startDateHandler({days: 7}) }}>+7</Button>
+                    </ButtonGroup>
+                </Stack>
+                <Stack className="center-margin" direction="horizontal" gap={1}>
+                    <Button size="sm" onClick={() => { props.startDateHandler({years: -1}) }}>-</Button>
+                    {format(props.startDate, 'yyyy')}
+                    <Button size="sm" onClick={() => { props.startDateHandler({years: 1}) }}>+</Button>
+                </Stack>
             </Stack>
-        </div>
-        <div className="center-margin">
-            <Stack direction="horizontal" gap={stackGap}>
-                <ButtonGroup size="sm">
-                    <Button onClick={() => { props.startDateHandler({days: -7}) }}>-7</Button>
-                    <Button onClick={() => { props.startDateHandler({days: -1}) }}>-1</Button>
-                </ButtonGroup>
-                {format(props.startDate, 'do')}
-                <ButtonGroup size="sm">
-                    <Button onClick={() => { props.startDateHandler({days: 1}) }}>+1</Button>
-                    <Button onClick={() => { props.startDateHandler({days: 7}) }}>+7</Button>
-                </ButtonGroup>
+
+            <strong>duration</strong>
+            <Stack className="center-margin" direction="horizontal" gap={3}>
+                <Button disabled={disableSubYear} size="sm" onClick={() => { props.simDurationHandler(simYears - 1) }}>-</Button>
+                {formatDuration(props.simDuration)}
+                <Button disabled={disableAddYear} size="sm" onClick={() => { props.simDurationHandler(simYears + 1) }}>+</Button>
             </Stack>
-        </div>
-        <div className="center-margin">
-            <Stack direction="horizontal" gap={stackGap}>
-                <Button onClick={() => { props.startDateHandler({years: -1}) }}>-</Button>
-                {format(props.startDate, 'yyyy')}
-                <Button onClick={() => { props.startDateHandler({years: 1}) }}>+</Button>
-            </Stack>
-        </div>
-    </Stack>
+        </Stack>
+    </Card.Body>
 </Card>
 )
 }
 
 export function SalaryInput (props) {
 return (
-<Card style={{ width: '25rem' }}>
+<Card className="center-text" style={{ width: '25rem' }}>
+    <Card.Title>Salary</Card.Title>
     <Card.Body>
-        <Card.Title className="center-text">Salary</Card.Title>
         <Stack direction="vertical" gap={stackGap}>
             <strong>annual salary</strong>
-            <div className="center-margin">
-                <Stack direction="horizontal" gap={stackGap}>
-                    <ButtonGroup size="sm">
-                        <Button onClick={() => { props.salaryHandler(-1000) }}>-$1k</Button>
-                        <Button onClick={() => { props.salaryHandler(-100) }}>-$100</Button>
-                    </ButtonGroup>
-                    {formatUSD(props.salary)}
-                    <ButtonGroup size="sm">
-                        <Button onClick={() => { props.salaryHandler(100) }}>+$100</Button>
-                        <Button onClick={() => { props.salaryHandler(1000) }}>+$1k</Button>
-                    </ButtonGroup>
-                </Stack>
-            </div>
+            <Stack className="center-margin" direction="horizontal" gap={stackGap}>
+                <ButtonGroup size="sm">
+                    <Button onClick={() => { props.salaryHandler(-1000) }}>-$1k</Button>
+                    <Button onClick={() => { props.salaryHandler(-100) }}>-$100</Button>
+                </ButtonGroup>
+                {formatUSD(props.salary)}
+                <ButtonGroup size="sm">
+                    <Button onClick={() => { props.salaryHandler(100) }}>+$100</Button>
+                    <Button onClick={() => { props.salaryHandler(1000) }}>+$1k</Button>
+                </ButtonGroup>
+            </Stack>
 
             <strong>start balance</strong>
-            <div className="center-margin">
-                <Stack direction="horizontal" gap={stackGap}>
-                    <ButtonGroup size="sm">
-                        <Button onClick={() => { props.startBalanceHandler(-1000) }}>-$1k</Button>
-                        <Button onClick={() => { props.startBalanceHandler(-100) }}>-$100</Button>
-                    </ButtonGroup>
-                    {formatUSD(props.startBalance)}
-                    <ButtonGroup size="sm">
-                        <Button onClick={() => { props.startBalanceHandler(100) }}>+$100</Button>
-                        <Button onClick={() => { props.startBalanceHandler(1000) }}>+$1k</Button>
-                    </ButtonGroup>
-                </Stack>
-            </div>
-
-            <div className="center-margin">
-                <Form.Check type="switch" id="payCheckSwitch" label="show paycheck markers" onChange={props.showPayCheckLinesHandler} checked={props.showPayCheckLines}/>
-            </div>
+            <Stack className="center-margin"direction="horizontal" gap={stackGap}>
+                <ButtonGroup size="sm">
+                    <Button onClick={() => { props.startBalanceHandler(-1000) }}>-$1k</Button>
+                    <Button onClick={() => { props.startBalanceHandler(-100) }}>-$100</Button>
+                </ButtonGroup>
+                {formatUSD(props.startBalance)}
+                <ButtonGroup size="sm">
+                    <Button onClick={() => { props.startBalanceHandler(100) }}>+$100</Button>
+                    <Button onClick={() => { props.startBalanceHandler(1000) }}>+$1k</Button>
+                </ButtonGroup>
+            </Stack>
         </Stack>
     </Card.Body>
 </Card>
@@ -92,42 +93,30 @@ return (
 
 export function BillsInput (props) {
 return (
-<Card style={{ width: '25rem' }}>
+<Card className="center-text" style={{ width: '18rem' }}>
+    <Card.Title>Bills</Card.Title>
     <Card.Body>
-        <Card.Title className="center-text">Bills</Card.Title>
-        <Stack direction="vertical" gap={stackGap}>
+        <Stack direction="vertical" gap={2}>
     
             <strong>housing</strong>
-            <Stack direction="horizontal" gap={stackGap}>
-                <ButtonGroup size="sm">
-                    <Button onClick={() => { props.housingCostHandler(-50) }}>-$50</Button>
-                </ButtonGroup>
+            <Stack className="center-margin" direction="horizontal" gap={stackGap}>
+                <Button size="sm" onClick={() => { props.housingCostHandler(-50) }}>-$50</Button>
                 {formatUSD(props.housingCost)}
-                <ButtonGroup size="sm">
-                    <Button onClick={() => { props.housingCostHandler(50) }}>+$50</Button>
-                </ButtonGroup>
+                <Button size="sm" onClick={() => { props.housingCostHandler(50) }}>+$50</Button>
             </Stack>
 
             <strong>electric</strong>
-            <Stack direction="horizontal" gap={stackGap}>
-                <ButtonGroup size="sm">
-                    <Button onClick={() => { props.electricCostHandler(-15) }}>-$15</Button>
-                </ButtonGroup>
+            <Stack className="center-margin" direction="horizontal" gap={stackGap}>
+                <Button size="sm" onClick={() => { props.electricCostHandler(-15) }}>-$15</Button>
                 {formatUSD(props.electricCost)}
-                <ButtonGroup size="sm">
-                    <Button onClick={() => { props.electricCostHandler(15) }}>+$15</Button>
-                </ButtonGroup>
+                <Button size="sm" onClick={() => { props.electricCostHandler(15) }}>+$15</Button>
             </Stack>
 
             <strong>water</strong>
-            <Stack direction="horizontal" gap={stackGap}>
-                <ButtonGroup size="sm">
-                    <Button onClick={() => { props.waterCostHandler(-15) }}>-$15</Button>
-                </ButtonGroup>
+            <Stack className="center-margin" direction="horizontal" gap={stackGap}>
+                <Button size="sm" onClick={() => { props.waterCostHandler(-15) }}>-$15</Button>
                 {formatUSD(props.waterCost)}
-                <ButtonGroup size="sm">
-                    <Button onClick={() => { props.waterCostHandler(15) }}>+$15</Button>
-                </ButtonGroup>
+                <Button size="sm" onClick={() => { props.waterCostHandler(15) }}>+$15</Button>
             </Stack>
         
         </Stack>
@@ -138,32 +127,69 @@ return (
 
 export function FinanceInput (props) {
 return (
-<Card style={{ width: '25rem' }}>
+<Card style={{ width: '19rem' }}>
+    <Card.Title className="center-text">Finance</Card.Title>
     <Card.Body>
-        <Card.Title className="center-text">Finance</Card.Title>
-        <Form.Switch label="Use DeFi" onChange={props.useDeFiHandler} checked={props.useDefi}/>
-        <Form.Check type="switch" id="streamingSwitch" label="Use streaming" onChange={props.useStreamingHandler} checked={props.useStreaming}/>
+        <Form>
+            <Row>
+                <Col><Form.Switch label="Use DeFi" onChange={props.useDeFiHandler} checked={props.useDefi}/></Col>
+                <Col><Form.Switch label="streaming" onChange={props.useStreamingHandler} checked={props.useStreaming}/></Col>
+            </Row>
+        </Form>
+        <Container className="center-margin">
+            <Row>
+                <Col>savings rate:</Col><Col>{ formatRate(props.savingsRate) }</Col>
+            </Row>
+            <Row>
+                <Col>credit rate:</Col><Col>{ formatRate(props.creditRate) }</Col>
+            </Row>
+        </Container>
     </Card.Body>
 </Card>
 )
 }
 
-export function TransactionWidget (props) {
+export function GraphOptions (props) {
 return (
-<Card style={{ width: '25rem' }}>
+<Card style={{ width: '18rem' }}>
+    <Card.Title className="center-text">Graph options</Card.Title>
     <Card.Body>
-        <Card.Title className="center-text">Transactions</Card.Title>
-        <Container>
+        <Form>
+            <Row>
+                <Col><Form.Switch className="center-margin" label="fit on screen" onChange={props.fitToScreenHandler} checked={props.fitToScreen}/></Col>
+            </Row>
+            <Row>
+                <Col><Form.Switch className="center-margin" label="show paychecks" onChange={props.showPayCheckLinesHandler} checked={props.showPayCheckLines}/></Col>
+            </Row>
+        </Form>
+    </Card.Body>
+</Card>
+)
+}
+
+export function ExpensesWidget (props) {
+const items = props.transactions.items
+const haveTransactions = items.length > 0
+return (
+<Card className="center-text" style={{ width: '18rem' }}>
+    <Card.Title>Unexpected expenses</Card.Title>
+    <Card.Body>
+        {
+            !haveTransactions && <p>Click graph to add an expense.</p>
+        }
+        {
+            haveTransactions &&
+            <Container>
             {
-                props.transactions.items.map((trans, index) => (
+                items.map((trans, index) => (
                     <Row key={index}>
                         <Col>{trans.date.substring(0, trans.date.length - 6)}</Col>
                         <Col>{formatUSD(trans.amount)}</Col>
-                        <Col>{trans.name}</Col>
                     </Row>
                 ))
             }
-        </Container>
+            </Container>
+        }
     </Card.Body>
 </Card>
 )
@@ -171,27 +197,21 @@ return (
 
 export function ResultWidget (props) {
 return (
-<Card style={{ width: '25rem' }}>
+<Card  style={{ width: '23rem' }}>
+    <Card.Title className="center-text">Results</Card.Title>
     <Card.Body>
-        <Card.Title className="center-text">Results</Card.Title>
-        <Container>
+        <Container className="center-margin">
             <Row>
-                <Col>final balance:</Col><Col>{formatUSD(props.finalBalance)}</Col>
+                <Col><strong>final balance:</strong></Col><Col>{formatUSD(props.finalBalance)}</Col>
             </Row>
             <Row>
-                <Col>total paychecks:</Col><Col>{ props.payChecks.length }</Col>
+                <Col><strong>total paychecks:</strong></Col><Col>{ props.payChecks.length }</Col>
             </Row>
             <Row>
-                <Col>savings rate:</Col><Col>{ formatRate(props.savingsRate) }</Col>
+                <Col><strong>interest earned:</strong></Col><Col>{ formatUSD(props.interestEarned) }</Col>
             </Row>
             <Row>
-                <Col>interest earned:</Col><Col>{ formatUSD(props.interestEarned) }</Col>
-            </Row>
-            <Row>
-                <Col>credit rate:</Col><Col>{ formatRate(props.creditRate) }</Col>
-            </Row>
-            <Row>
-                <Col>interest paid:</Col><Col>{ formatUSD(props.interestPaid) }</Col>
+                <Col><strong>interest paid:</strong></Col><Col>{ formatUSD(props.interestPaid) }</Col>
             </Row>
         </Container>
     </Card.Body>
