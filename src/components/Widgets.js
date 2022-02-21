@@ -1,12 +1,36 @@
 import { format, formatDuration } from 'date-fns'
-import { Stack, Button, ButtonGroup, Card, Form, Container, Row, Col } from 'react-bootstrap';
+import { Stack, Button, ButtonGroup, Card, Form, Container, Row, Col, Table } from 'react-bootstrap';
 import { stackGap } from './Chart.js';
 
-export function formatUSD (num) { return new Intl.NumberFormat('en-EN', { style: 'currency', currency: 'USD' }).format(num) }
+//
+// formatters
+//
+
 export function formatRate (rate) { 
     const num = rate * 100
     return num.toFixed(1) + '%' 
 }
+
+const USDFormatter = new Intl.NumberFormat('en-EN', { style: 'currency', currency: 'USD' })
+export function formatUSD (num) { return USDFormatter.format(num) }
+
+const ordinalFormatter = new Intl.PluralRules('en-US', { type: 'ordinal' })
+const suffixes = new Map([
+    ['one',   'st'],
+    ['two',   'nd'],
+    ['few',   'rd'],
+    ['other', 'th'],
+  ]);
+export function formatOrdinal (num) {
+    const rule = ordinalFormatter.select(num);
+    const suffix = suffixes.get(rule);
+    return `${num}${suffix}`;
+}
+
+
+//
+// top row
+//
 
 export function SimulationInput (props) {
 const simYears = props.simDuration.years
@@ -54,6 +78,78 @@ return (
 )
 }
 
+export function FinanceInput (props) {
+return (
+<Card style={{ width: '20rem' }}>
+    <Card.Title className="center-text">Finance</Card.Title>
+    <Card.Body>
+        <Container className="center-margin">
+            <Row>
+                <Col><Form.Switch label="DeFi" onChange={props.useDeFiHandler} checked={props.useDefi}/></Col>
+                <Col><Form.Switch label="Streaming" onChange={props.useStreamingHandler} checked={props.useStreaming}/></Col>
+            </Row>
+            <Row>
+                <Col><strong>savings rate:</strong></Col><Col>{ formatRate(props.savingsRate) }</Col>
+            </Row>
+            <Row>
+                <Col><strong>credit rate:</strong></Col><Col>{ formatRate(props.creditRate) }</Col>
+            </Row>
+        </Container>
+    </Card.Body>
+</Card>
+)
+}
+
+export function GraphOptions (props) {
+return (
+<Card style={{ width: '14rem' }}>
+    <Card.Title className="center-text">Graph options</Card.Title>
+    <Card.Body>
+        <Form>
+            <Row>
+                <Col>
+                    <Form.Switch className="center-margin" label="fit on screen" onChange={props.fitToScreenHandler} checked={props.fitToScreen}/>
+                </Col>
+            </Row>
+            <Row>
+                <Col>
+                    <Form.Switch className="center-margin" label="show paychecks" onChange={props.showPayCheckLinesHandler} checked={props.showPayCheckLines}/>
+                </Col>
+            </Row>
+        </Form>
+    </Card.Body>
+</Card>
+)
+}
+
+export function ResultWidget (props) {
+return (
+<Card style={{ width: '20rem' }}>
+    <Card.Title className="center-text">Results</Card.Title>
+    <Card.Body>
+        <Container className="center-margin">
+            <Row>
+                <Col><strong>final balance:</strong></Col><Col>{formatUSD(props.finalBalance)}</Col>
+            </Row>
+            <Row>
+                <Col><strong>paychecks:</strong></Col><Col>{ props.payChecks.length }</Col>
+            </Row>
+            <Row>
+                <Col><strong>interest earned:</strong></Col><Col>{ formatUSD(props.interestEarned) }</Col>
+            </Row>
+            <Row>
+                <Col><strong>interest paid:</strong></Col><Col>{ formatUSD(props.interestPaid) }</Col>
+            </Row>
+        </Container>
+    </Card.Body>
+</Card>
+)
+}
+
+//
+// bottom row
+//
+
 export function SalaryInput (props) {
 return (
 <Card className="center-text" style={{ width: '25rem' }}>
@@ -96,72 +192,85 @@ return (
 <Card className="center-text" style={{ width: '18rem' }}>
     <Card.Title>Bills</Card.Title>
     <Card.Body>
-        <Stack direction="vertical" gap={2}>
-    
-            <strong>housing</strong>
-            <Stack className="center-margin" direction="horizontal" gap={stackGap}>
-                <Button size="sm" onClick={() => { props.housingCostHandler(-50) }}>-$50</Button>
-                {formatUSD(props.housingCost)}
-                <Button size="sm" onClick={() => { props.housingCostHandler(50) }}>+$50</Button>
-            </Stack>
-
-            <strong>electric</strong>
-            <Stack className="center-margin" direction="horizontal" gap={stackGap}>
-                <Button size="sm" onClick={() => { props.electricCostHandler(-15) }}>-$15</Button>
-                {formatUSD(props.electricCost)}
-                <Button size="sm" onClick={() => { props.electricCostHandler(15) }}>+$15</Button>
-            </Stack>
-
-            <strong>water</strong>
-            <Stack className="center-margin" direction="horizontal" gap={stackGap}>
-                <Button size="sm" onClick={() => { props.waterCostHandler(-15) }}>-$15</Button>
-                {formatUSD(props.waterCost)}
-                <Button size="sm" onClick={() => { props.waterCostHandler(15) }}>+$15</Button>
-            </Stack>
-        
-        </Stack>
-    </Card.Body>
-</Card>
-)
-}
-
-export function FinanceInput (props) {
-return (
-<Card style={{ width: '19rem' }}>
-    <Card.Title className="center-text">Finance</Card.Title>
-    <Card.Body>
-        <Form>
-            <Row>
-                <Col><Form.Switch label="Use DeFi" onChange={props.useDeFiHandler} checked={props.useDefi}/></Col>
-                <Col><Form.Switch label="streaming" onChange={props.useStreamingHandler} checked={props.useStreaming}/></Col>
-            </Row>
-        </Form>
-        <Container className="center-margin">
-            <Row>
-                <Col>savings rate:</Col><Col>{ formatRate(props.savingsRate) }</Col>
-            </Row>
-            <Row>
-                <Col>credit rate:</Col><Col>{ formatRate(props.creditRate) }</Col>
-            </Row>
-        </Container>
-    </Card.Body>
-</Card>
-)
-}
-
-export function GraphOptions (props) {
-return (
-<Card style={{ width: '18rem' }}>
-    <Card.Title className="center-text">Graph options</Card.Title>
-    <Card.Body>
-        <Form>
-            <Row>
-                <Col><Form.Switch className="center-margin" label="fit on screen" onChange={props.fitToScreenHandler} checked={props.fitToScreen}/></Col>
-            </Row>
-            <Row>
-                <Col><Form.Switch className="center-margin" label="show paychecks" onChange={props.showPayCheckLinesHandler} checked={props.showPayCheckLines}/></Col>
-            </Row>
-        </Form>
+        <Table>
+            <thead>
+                <tr>
+                    <th>name</th>
+                    <th>amount</th>
+                    <th>monthly due date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>housing</strong></td>
+                    <td >
+                        <Stack className="justify-content-center" direction="horizontal" gap={stackGap}>
+                            <Button size="sm" onClick={() => { props.housingCostHandler(-50) }}>-</Button>
+                            {formatUSD(props.housingCost)}
+                            <Button size="sm" onClick={() => { props.housingCostHandler(50) }}>+</Button>
+                        </Stack>
+                    </td>
+                    <td>
+                        <Stack className="justify-content-center" direction="horizontal" gap={stackGap}>
+                            <Button size="sm" onClick={() => { props.housingDueHandler(-1) }}>-</Button>
+                            {formatOrdinal(props.housingDue)}
+                            <Button size="sm" onClick={() => { props.housingDueHandler(1) }}>+</Button>
+                        </Stack>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>car</strong></td>
+                    <td>
+                        <Stack className="justify-content-center" direction="horizontal" gap={stackGap}>
+                            <Button size="sm" onClick={() => { props.carCostHandler(-25) }}>-</Button>
+                            {formatUSD(props.carCost)}
+                            <Button size="sm" onClick={() => { props.carCostHandler(25) }}>+</Button>
+                        </Stack>
+                    </td>
+                    <td>
+                        <Stack className="justify-content-center" direction="horizontal" gap={stackGap}>
+                            <Button size="sm" onClick={() => { props.carDueHandler(-1) }}>-</Button>
+                            {formatOrdinal(props.carDue)}
+                            <Button size="sm" onClick={() => { props.carDueHandler(1) }}>+</Button>
+                        </Stack>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>electric</strong></td>
+                    <td>
+                        <Stack className="justify-content-center" direction="horizontal" gap={stackGap}>
+                            <Button size="sm" onClick={() => { props.electricCostHandler(-15) }}>-</Button>
+                            {formatUSD(props.electricCost)}
+                            <Button size="sm" onClick={() => { props.electricCostHandler(15) }}>+</Button>
+                        </Stack>
+                    </td>
+                    <td>
+                        <Stack className="justify-content-center" direction="horizontal" gap={stackGap}>
+                            <Button size="sm" onClick={() => { props.electricDueHandler(-1) }}>-</Button>
+                            {formatOrdinal(props.electricDue)}
+                            <Button size="sm" onClick={() => { props.electricDueHandler(1) }}>+</Button>
+                        </Stack>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>water</strong></td>
+                    <td>
+                        <Stack className="justify-content-center" direction="horizontal" gap={stackGap}>
+                            <Button size="sm" onClick={() => { props.waterCostHandler(-15) }}>-</Button>
+                            {formatUSD(props.waterCost)}
+                            <Button size="sm" onClick={() => { props.waterCostHandler(15) }}>+</Button>
+                        </Stack>
+                    </td>
+                    <td>
+                        <Stack className="justify-content-center" direction="horizontal" gap={stackGap}>
+                            <Button size="sm" onClick={() => { props.waterDueHandler(-1) }}>-</Button>
+                            {formatOrdinal(props.waterDue)}
+                            <Button size="sm" onClick={() => { props.waterDueHandler(1) }}>+</Button>
+                        </Stack>
+                    </td>
+                </tr>
+            </tbody>
+        </Table>
     </Card.Body>
 </Card>
 )
@@ -183,7 +292,7 @@ return (
             {
                 items.map((trans, index) => (
                     <Row key={index}>
-                        <Col>{trans.date.substring(0, trans.date.length - 6)}</Col>
+                        <Col>{trans.date}</Col>
                         <Col>{formatUSD(trans.amount)}</Col>
                     </Row>
                 ))
@@ -195,26 +304,3 @@ return (
 )
 }
 
-export function ResultWidget (props) {
-return (
-<Card  style={{ width: '23rem' }}>
-    <Card.Title className="center-text">Results</Card.Title>
-    <Card.Body>
-        <Container className="center-margin">
-            <Row>
-                <Col><strong>final balance:</strong></Col><Col>{formatUSD(props.finalBalance)}</Col>
-            </Row>
-            <Row>
-                <Col><strong>total paychecks:</strong></Col><Col>{ props.payChecks.length }</Col>
-            </Row>
-            <Row>
-                <Col><strong>interest earned:</strong></Col><Col>{ formatUSD(props.interestEarned) }</Col>
-            </Row>
-            <Row>
-                <Col><strong>interest paid:</strong></Col><Col>{ formatUSD(props.interestPaid) }</Col>
-            </Row>
-        </Container>
-    </Card.Body>
-</Card>
-)
-}
