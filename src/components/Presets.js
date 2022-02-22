@@ -1,6 +1,7 @@
 import { TransactionList } from "../DataGenerator"
 
 const DefalultPreset = {
+    name: "Default",
     useStreaming: false,
     useDeFi: false,
     startDate: new Date('Jan 01, 2022'),
@@ -20,6 +21,27 @@ const DefalultPreset = {
     waterDue: 25
 }
 
-const PresetList = [DefalultPreset]
+const TestPreset = {
+    name: "Test",
+    useStreaming: false,
+    useDeFi: false,
+    startDate: new Date('Jan 01, 2022'),
+    simDuration: {years: 1},
+    salary: 50000,
+    startBalance: 200,
+    showPayCheckLines: true,
+    fitToScreen: false,
+    unexpectedTrans: new TransactionList([]),
+    housingCost: 1000,
+    housingDue: 1,
+    carCost: 250,
+    carDue: 5,
+    electricCost: 150,
+    electricDue: 15,
+    waterCost: 100,
+    waterDue: 25
+}
+
+const PresetList = [DefalultPreset, TestPreset]
 
 export default PresetList

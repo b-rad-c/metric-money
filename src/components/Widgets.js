@@ -1,6 +1,7 @@
 import { format, formatDuration } from 'date-fns'
-import { Stack, Button, ButtonGroup, Card, Form, Container, Row, Col, Table } from 'react-bootstrap';
+import { Stack, Button, ButtonGroup, Card, Form, Container, Row, Col, Table, FloatingLabel } from 'react-bootstrap';
 import { stackGap } from './Chart.js';
+import PresetList from './Presets.js';
 
 //
 // formatters
@@ -106,16 +107,19 @@ return (
     <Card.Title className="center-text">Graph options</Card.Title>
     <Card.Body>
         <Form>
-            <Row>
-                <Col>
-                    <Form.Switch className="center-margin" label="fit on screen" onChange={props.fitToScreenHandler} checked={props.fitToScreen}/>
-                </Col>
-            </Row>
-            <Row>
-                <Col>
-                    <Form.Switch className="center-margin" label="show paychecks" onChange={props.showPayCheckLinesHandler} checked={props.showPayCheckLines}/>
-                </Col>
-            </Row>
+            <FloatingLabel label="Select a graph preset">
+                <Form.Select onChange={props.selectedPresetHandler} value={props.selectedPreset}>
+                    
+                    { // <option disabled value="custom">-</option>
+                        PresetList.map((preset, index) => {
+                            return <option key={index} value={index}>{preset.name}</option>
+                        })
+                    }
+                </Form.Select>
+            </FloatingLabel>
+            
+            <Form.Switch className="center-margin" label="fit on screen" onChange={props.fitToScreenHandler} checked={props.fitToScreen}/>
+            <Form.Switch className="center-margin" label="show paychecks" onChange={props.showPayCheckLinesHandler} checked={props.showPayCheckLines}/>
         </Form>
     </Card.Body>
 </Card>

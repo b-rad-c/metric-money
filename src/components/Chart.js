@@ -28,13 +28,16 @@ import {
 
 export const stackGap = 3
 
-const preset = PresetList[0]
-
 function MetricMoneyChart() {
 
   //
   // state variables and handlers
   //
+
+  const [selectedPreset, setSelectedPreset] = useState(0);
+  const selectedPresetHandler = (e) => { setSelectedPreset(e.target.options.selectedIndex) }
+
+  const preset = useMemo(() => { return PresetList[selectedPreset] }, [selectedPreset])
 
   const [useStreaming, setUseStreaming] = useState(preset.useStreaming);
   const useStreamingHandler = (e) => { setUseStreaming(e.target.checked) }
@@ -117,7 +120,7 @@ function MetricMoneyChart() {
     generator.configChart(fitToScreen)
     generator.expenses(bills, unexpectedTrans)
     return generator.run(startDate, simDuration)
-  }, [startDate, simDuration, startBalance, useStreaming, useDeFi, fitToScreen, salary, bills, unexpectedTrans]);
+  }, [preset, startDate, simDuration, startBalance, useStreaming, useDeFi, fitToScreen, salary, bills, unexpectedTrans]);
 
   //
   // chart config
@@ -213,6 +216,8 @@ function MetricMoneyChart() {
           creditRate={chartData.creditRate} />
 
         <GraphOptions
+          selectedPreset={selectedPreset}
+          selectedPresetHandler={selectedPresetHandler}
           fitToScreen={fitToScreen}
           fitToScreenHandler={fitToScreenHandler}
           showPayCheckLines={showPayCheckLines} 
