@@ -1,9 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { CardGroup } from 'react-bootstrap';
-import { add } from 'date-fns'
-import { clamp } from 'lodash'
-import { Bill, BillList, Generator, Transaction, TransactionList } from '../DataGenerator';
 import PresetList from './Presets';
+import { Bill, BillList, Generator, Transaction, TransactionList } from '../DataGenerator';
 import { 
   SimulationInput, 
   SalaryInput,
@@ -31,108 +29,63 @@ export const stackGap = 3
 function MetricMoneyChart() {
 
   //
-  // state variables and handlers
+  // state management
   //
 
   const [selectedPreset, setSelectedPreset] = useState(0);
-  const selectedPresetHandler = (e) => { setSelectedPreset(e.target.options.selectedIndex) }
+  const selectedPresetHandler = (e) => { 
+    const i = e.target.options.selectedIndex - 1
+    console.log('changing preset', i)
+    setSelectedPreset(i) 
+    setState(PresetList[i])
+  }
 
-  const preset = useMemo(() => { return PresetList[selectedPreset] }, [selectedPreset])
-
-  const [useStreaming, setUseStreaming] = useState(preset.useStreaming);
-  const useStreamingHandler = (e) => { setUseStreaming(e.target.checked) }
-
-  const [useDeFi, setUseDeFi] = useState(preset.useDeFi);
-  const useDeFiHandler = (e) => { setUseDeFi(e.target.checked); }
-
-  const [startDate, setStartDate] = useState(preset.startDate);
-  const startDateHandler = (offset) => { setStartDate(add(startDate, offset)) }
-
-  const [simDuration, setSimDuration] = useState(preset.simDuration);
-  const simDurationHandler = (years) => { setSimDuration({years: years}) }
-
-  const [salary, setSalary] = useState(preset.salary);
-  const salaryHandler = (num) => { setSalary(salary + num) }
-
-  const [startBalance, setStartBalance] = useState(preset.startBalance);
-  const startBalanceHandler = (num) => { setStartBalance(startBalance + num) }
-
-  const [showPayCheckLines, setShowPayCheckLines] = useState(preset.showPayCheckLines);
-  const showPayCheckLinesHandler = (e) => { setShowPayCheckLines(e.target.checked) }
-
-  const [fitToScreen, setFitToScreen] = useState(preset.fitToScreen);
-  const fitToScreenHandler = (e) => { setFitToScreen(e.target.checked) }
-
-  // unexpected transactions
-  const [unexpectedTrans, setUnexpectedTrans] = useState(preset.unexpectedTrans);
+  const [state, setState] = useState(PresetList[selectedPreset]);
+  const updateState = (prop, value) => {
+    setSelectedPreset(-1) // change preset dropdown to indicate form has changed
+    setState(prevState => {
+      const updates = {}
+      updates[prop] = value
+      return {...prevState, ...updates}
+    })
+  }
 
   function unexpectedHandler(e) {
     const newTrans = new Transaction('UNEXPECTED EXPENSE', 500, e.activeLabel)
-    const newList = new TransactionList(unexpectedTrans.items.concat([newTrans]))
-    setUnexpectedTrans(newList)
+    const newList = new TransactionList(state.unexpectedTrans.items.concat([newTrans]))
+    updateState('unexpectedTrans', newList)
   }
-
-  // bill inputs
-  const [housingCost, setHousingCost] = useState(preset.housingCost);
-  const housingCostHandler = (num) => { setHousingCost(housingCost + num) }
-
-  const [housingDue, setHousingDue] = useState(preset.housingDue);
-  const housingDueHandler = (num) => { setHousingDue(clamp(housingDue + num, 1, 27)) }
-
-  const [carCost, setCarCost] = useState(preset.carCost);
-  const carCostHandler = (num) => { setCarCost(carCost + num) }
-
-  const [carDue, setCarDue] = useState(preset.carDue);
-  const carDueHandler = (num) => { setCarDue(clamp(carDue + num, 1, 27)) }
-
-  const [electricCost, setElectricCost] = useState(preset.electricCost);
-  const electricCostHandler = (num) => { setElectricCost(electricCost + num) }
-
-  const [electricDue, setElectricDue] = useState(preset.electricDue);
-  const electricDueHandler = (num) => { setElectricDue(clamp(electricDue + num, 1, 27)) }
-
-  const [waterCost, setWaterCost] = useState(preset.waterCost);
-  const waterCostHandler = (num) => { setWaterCost(waterCost + num) }
-
-  const [waterDue, setWaterDue] = useState(preset.waterDue);
-  const waterDueHandler = (num) => { setWaterDue(clamp(waterDue + num, 1, 27)) }
-
-  const bills = useMemo(() => {
-
-    return new BillList([
-      new Bill('HOUSING', housingCost, housingDue),
-      new Bill('CAR', carCost, carDue),
-      new Bill('ELECTRIC', electricCost, electricDue),
-      new Bill('WATER', waterCost, waterDue)
-    ])
-
-  }, [housingCost, housingDue, electricCost, electricDue, waterCost, waterDue, carCost, carDue])
-
 
   //
   // chart data
   //
 
   const chartData = useMemo(() => {
+    const bills = new BillList([
+      new Bill('HOUSING', state.housingCost, state.housingDue),
+      new Bill('CAR', state.carCost, state.carDue),
+      new Bill('ELECTRIC', state.electricCost, state.electricDue),
+      new Bill('WATER', state.waterCost, state.waterDue)
+    ])
     const generator = new Generator()
-    generator.configSalary(startBalance, salary)
-    generator.configFinance(useStreaming, useDeFi)
-    generator.configChart(fitToScreen)
-    generator.expenses(bills, unexpectedTrans)
-    return generator.run(startDate, simDuration)
-  }, [preset, startDate, simDuration, startBalance, useStreaming, useDeFi, fitToScreen, salary, bills, unexpectedTrans]);
+    generator.configSalary(state.startBalance, state.salary)
+    generator.configFinance(state.useStreaming, state.useDeFi)
+    generator.configChart(state.fitToScreen)
+    generator.expenses(bills, state.unexpectedTrans)
+    return generator.run(state.startDate, state.simDuration)
+  }, [state]);
 
   //
   // chart config
   //
   
   const chartWidth = useMemo(() => { 
-    if(!fitToScreen && simDuration.years > 1) { 
-      return 1500 * simDuration.years 
+    if(!state.fitToScreen && state.simDuration.years > 1) { 
+      return 1500 * state.simDuration.years 
     } else {
        return "100%" 
       } 
-  }, [fitToScreen, simDuration])
+  }, [state])
   const chartMargin = { top: 20, right: 40, bottom: 20, left: 40 }
 
   const dateTickFormatter = (label, index) => { return (label.startsWith('Jan') || index === 0) ? label : label.substring(0, label.length - 8) }
@@ -176,7 +129,7 @@ function MetricMoneyChart() {
           }
 
           { // pay check reference lines
-            showPayCheckLines && chartData.payChecks.map((payDate, index) => (
+            state.showPayCheckLines && chartData.payChecks.map((payDate, index) => (
               <ReferenceLine key={index} x={payDate} stroke="green" strokeDasharray="0" strokeWidth={2} />
             ))
           }
@@ -202,66 +155,37 @@ function MetricMoneyChart() {
 
     <CardGroup>
       <SimulationInput 
-          startDateHandler={startDateHandler} 
-          startDate={startDate} 
-          simDuration={simDuration}
-          simDurationHandler={simDurationHandler} />
+        state={state} 
+        updateState={updateState} />
         
-        <FinanceInput
-          useStreaming={useStreaming}
-          useStreamingHandler={useStreamingHandler}
-          useDeFi={useDeFi}
-          useDeFiHandler={useDeFiHandler}
-          savingsRate={chartData.savingsRate}
-          creditRate={chartData.creditRate} />
+      <FinanceInput
+        state={state}
+        updateState={updateState}
+        chartData={chartData} />
 
-        <GraphOptions
-          selectedPreset={selectedPreset}
-          selectedPresetHandler={selectedPresetHandler}
-          fitToScreen={fitToScreen}
-          fitToScreenHandler={fitToScreenHandler}
-          showPayCheckLines={showPayCheckLines} 
-          showPayCheckLinesHandler={showPayCheckLinesHandler} />
-        
-        <ResultWidget
-          finalBalance={chartData.finalBalance}
-          payChecks={chartData.payChecks}
-          interestPaid={chartData.interestPaid}
-          interestEarned={chartData.interestEarned} />
-      </CardGroup>
+      <GraphOptions
+        state={state}
+        updateState={updateState}
+        selectedPreset={selectedPreset}
+        selectedPresetHandler={selectedPresetHandler} />
+      
+      <ResultWidget
+        chartData={chartData} />
 
-      <CardGroup>
-        <SalaryInput 
-          salary={salary} 
-          salaryHandler={salaryHandler} 
-          startBalance={startBalance} 
-          startBalanceHandler={startBalanceHandler} />
+    </CardGroup>
 
-        <BillsInput
-          housingCost={housingCost}
-          housingCostHandler={housingCostHandler} 
-          housingDue={housingDue}
-          housingDueHandler={housingDueHandler}
+    <CardGroup>
+      <SalaryInput 
+        state={state}
+        updateState={updateState} />
 
-          carCost={carCost}
-          carCostHandler={carCostHandler}
-          carDue={carDue}
-          carDueHandler={carDueHandler}
+      <BillsInput
+        state={state}
+        updateState={updateState} />
 
-          electricCost={electricCost}
-          electricCostHandler={electricCostHandler}
-          electricDue={electricDue}
-          electricDueHandler={electricDueHandler}
-
-          waterCost={waterCost}
-          waterCostHandler={waterCostHandler} 
-          waterDue={waterDue}
-          waterDueHandler={waterDueHandler} 
-          />
-
-        <ExpensesWidget 
-          transactions={unexpectedTrans} />
-      </CardGroup>
+      <ExpensesWidget 
+        state={state} />
+    </CardGroup>
   </div>
   );
 }
