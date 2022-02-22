@@ -43,11 +43,11 @@ const disableAddYear = simYears === 10
 const startDateHandler = (offset) => { props.updateState('startDate', add(startDate, offset)) }
 const simDurationHandler = (years) => { props.updateState('simDuration', {years: years}) }
 return (
-<Card className="center-text" style={{ width: '28rem' }}>
+<Card className="center-text">
     <Card.Title>Simulation</Card.Title>
     <Card.Body>
         <Stack direction="vertical" gap={2}>
-            <strong>start date</strong>
+           
             <Stack direction="horizontal" gap={0}>
                 <Stack className="center-margin" direction="horizontal" gap={1}>
                     <Button size="sm" onClick={() => { startDateHandler({months: -1}) }}>-</Button>
@@ -84,36 +84,11 @@ return (
 )
 }
 
-export function FinanceInput (props) {
-const useStreamingHandler = (e) => { props.updateState('useStreaming', e.target.checked) }
-const useDeFiHandler = (e) => { props.updateState('useDeFi', e.target.checked); }
-
-return (
-<Card style={{ width: '20rem' }}>
-    <Card.Title className="center-text">Finance</Card.Title>
-    <Card.Body>
-        <Container className="center-margin">
-            <Row>
-                <Col><Form.Switch label="DeFi" onChange={useDeFiHandler} checked={props.state.useDefi}/></Col>
-                <Col><Form.Switch label="Streaming" onChange={useStreamingHandler} checked={props.state.useStreaming}/></Col>
-            </Row>
-            <Row>
-                <Col><strong>savings rate:</strong></Col><Col>{ formatRate(props.chartData.savingsRate) }</Col>
-            </Row>
-            <Row>
-                <Col><strong>credit rate:</strong></Col><Col>{ formatRate(props.chartData.creditRate) }</Col>
-            </Row>
-        </Container>
-    </Card.Body>
-</Card>
-)
-}
-
 export function GraphOptions (props) {
 const showPayCheckLinesHandler = (e) => { props.updateState('showPayCheckLines', e.target.checked) }
 const fitToScreenHandler = (e) => { props.updateState('fitToScreen', e.target.checked) }
 return (
-<Card style={{ width: '14rem' }}>
+<Card>
     <Card.Title className="center-text">Graph options</Card.Title>
     <Card.Body>
         <Form>
@@ -138,7 +113,7 @@ return (
 
 export function ResultWidget (props) {
 return (
-<Card style={{ width: '20rem' }}>
+<Card>
     <Card.Title className="center-text">Results</Card.Title>
     <Card.Body>
         <Container className="center-margin">
@@ -164,40 +139,63 @@ return (
 // bottom row
 //
 
-export function SalaryInput (props) {
+export function FinanceWidget (props) {
+const streamIncomingHandler = (e) => { props.updateState('streamIncoming', e.target.checked) }
+const useDeFiHandler = (e) => { props.updateState('useDeFi', e.target.checked); }
 const salaryHandler = (num) => { props.updateState('salary', props.state.salary + num) }
 const startBalanceHandler = (num) => { props.updateState('startBalance', props.state.startBalance + num) }
 return (
-<Card className="center-text" style={{ width: '25rem' }}>
-    <Card.Title>Salary</Card.Title>
+<Card className="center-text">
+    <Card.Title>Finance</Card.Title>
     <Card.Body>
-        <Stack direction="vertical" gap={stackGap}>
-            <strong>annual salary</strong>
-            <Stack className="center-margin" direction="horizontal" gap={stackGap}>
-                <ButtonGroup size="sm">
-                    <Button onClick={() => { salaryHandler(-1000) }}>-$1k</Button>
-                    <Button onClick={() => { salaryHandler(-100) }}>-$100</Button>
-                </ButtonGroup>
-                {formatUSD(props.state.salary)}
-                <ButtonGroup size="sm">
-                    <Button onClick={() => { salaryHandler(100) }}>+$100</Button>
-                    <Button onClick={() => { salaryHandler(1000) }}>+$1k</Button>
-                </ButtonGroup>
-            </Stack>
+        <Container style={{textAlign: 'left'}}>
+            <Form.Switch label="Stream income" onChange={streamIncomingHandler} checked={props.state.streamIncoming}/>
+        </Container>
+        
+        <Container>
+            <Row>
+                <Col style={{textAlign: 'left'}}><Form.Switch label="DeFi" onChange={useDeFiHandler} checked={props.state.useDefi}/></Col>
+                <Col><strong>savings rate:</strong> { formatRate(props.chartData.savingsRate) }</Col>
+                <Col><strong>credit rate:</strong>{ formatRate(props.chartData.creditRate) }</Col>
+            </Row>
+            <Row style={{marginTop: '1rem'}}>
+                <Col className="center-text"><strong>Salary</strong></Col>
+            </Row>
+            <Row>
+                <Col>
+                    <ButtonGroup size="sm">
+                        <Button onClick={() => { salaryHandler(-1000) }}>-$1k</Button>
+                        <Button onClick={() => { salaryHandler(-100) }}>-$100</Button>
+                    </ButtonGroup>
+                </Col>
+                <Col>{formatUSD(props.state.salary)}</Col>
+                <Col>
+                    <ButtonGroup size="sm">
+                        <Button onClick={() => { salaryHandler(100) }}>+$100</Button>
+                        <Button onClick={() => { salaryHandler(1000) }}>+$1k</Button>
+                    </ButtonGroup>
+                </Col>
+            </Row>
 
-            <strong>start balance</strong>
-            <Stack className="center-margin"direction="horizontal" gap={stackGap}>
-                <ButtonGroup size="sm">
-                    <Button onClick={() => { startBalanceHandler(-1000) }}>-$1k</Button>
-                    <Button onClick={() => { startBalanceHandler(-100) }}>-$100</Button>
-                </ButtonGroup>
-                {formatUSD(props.state.startBalance)}
-                <ButtonGroup size="sm">
-                    <Button onClick={() => { startBalanceHandler(100) }}>+$100</Button>
-                    <Button onClick={() => { startBalanceHandler(1000) }}>+$1k</Button>
-                </ButtonGroup>
-            </Stack>
-        </Stack>
+            <Row>
+                <Col className="center-text"><strong>Start balance</strong></Col>
+            </Row>
+            <Row>
+                <Col>
+                    <ButtonGroup size="sm">
+                        <Button onClick={() => { startBalanceHandler(-1000) }}>-$1k</Button>
+                        <Button onClick={() => { startBalanceHandler(-100) }}>-$100</Button>
+                    </ButtonGroup>
+                </Col>
+                <Col>{formatUSD(props.state.startBalance)}</Col>
+                <Col>
+                    <ButtonGroup size="sm">
+                        <Button onClick={() => { startBalanceHandler(100) }}>+$100</Button>
+                        <Button onClick={() => { startBalanceHandler(1000) }}>+$1k</Button>
+                    </ButtonGroup>
+                </Col>
+            </Row>
+        </Container>
     </Card.Body>
 </Card>
 )
@@ -206,10 +204,12 @@ return (
 export function BillsInput (props) {
 const costHandler = (name, num) => { props.updateState(name, props.state[name] + num) }
 const dueHandler = (name, day) => { props.updateState(name, clamp(props.state[name] + day, 1, 27)) }
+const streamOutgoingHandler = (e) => { props.updateState('streamOutgoing', e.target.checked) }
 return (
-<Card className="center-text" style={{ width: '18rem' }}>
+<Card className="center-text">
     <Card.Title>Bills</Card.Title>
     <Card.Body>
+        <Form.Switch style={{textAlign: 'left'}} label="Stream bill payment" onChange={streamOutgoingHandler} checked={props.state.streamOutgoing}/>
         <Table>
             <thead>
                 <tr>
@@ -298,7 +298,7 @@ export function ExpensesWidget (props) {
 const items = props.state.unexpectedTrans.items
 const haveTransactions = items.length > 0
 return (
-<Card className="center-text" style={{ width: '18rem' }}>
+<Card className="center-text">
     <Card.Title>Unexpected expenses</Card.Title>
     <Card.Body>
         {

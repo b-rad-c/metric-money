@@ -4,9 +4,8 @@ import PresetList from './Presets';
 import { Bill, BillList, Generator, Transaction, TransactionList } from '../DataGenerator';
 import { 
   SimulationInput, 
-  SalaryInput,
+  FinanceWidget,
   BillsInput, 
-  FinanceInput, 
   formatUSD, 
   ExpensesWidget, 
   ResultWidget,
@@ -69,7 +68,7 @@ function MetricMoneyChart() {
     ])
     const generator = new Generator()
     generator.configSalary(state.startBalance, state.salary)
-    generator.configFinance(state.useStreaming, state.useDeFi)
+    generator.configFinance(state.streamIncoming, state.streamOutgoing, state.useDeFi)
     generator.configChart(state.fitToScreen)
     generator.expenses(bills, state.unexpectedTrans)
     return generator.run(state.startDate, state.simDuration)
@@ -157,11 +156,6 @@ function MetricMoneyChart() {
       <SimulationInput 
         state={state} 
         updateState={updateState} />
-        
-      <FinanceInput
-        state={state}
-        updateState={updateState}
-        chartData={chartData} />
 
       <GraphOptions
         state={state}
@@ -170,14 +164,17 @@ function MetricMoneyChart() {
         selectedPresetHandler={selectedPresetHandler} />
       
       <ResultWidget
+        state={state}
+        updateState={updateState}
         chartData={chartData} />
 
     </CardGroup>
 
     <CardGroup>
-      <SalaryInput 
+      <FinanceWidget 
         state={state}
-        updateState={updateState} />
+        updateState={updateState} 
+        chartData={chartData} />
 
       <BillsInput
         state={state}

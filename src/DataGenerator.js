@@ -81,7 +81,8 @@ export class Generator {
         this.startBalance = 0
         this.salary = 0
 
-        this.useStreaming = false
+        this.streamIncoming = false
+        this.streamOutgoing = false
         this.useDeFi = false
 
         this.tradFiCreditRate = .17
@@ -100,8 +101,9 @@ export class Generator {
         this.salary = salary
     }
 
-    configFinance(useStreaming, useDeFi) {
-        this.useStreaming = useStreaming
+    configFinance(streamIncoming, streamOutgoing, useDeFi) {
+        this.streamIncoming = streamIncoming
+        this.streamOutgoing = streamOutgoing
         this.useDeFi = useDeFi
     }
 
@@ -116,7 +118,7 @@ export class Generator {
 
     run(startDate, duration) {
         // payrate is calculated daily for streaming and bi weekly otherwise
-        const payRate = (this.useStreaming) ? annualToStreaming(this.salary) * secondsPerDay : this.salary / 26
+        const payRate = (this.streamIncoming) ? annualToStreaming(this.salary) * secondsPerDay : this.salary / 26
         const result = new GeneratorResult()
 
         result.creditRate = this.useDeFi ? this.deFiCreditRate : this.tradFiCreditRate
@@ -142,7 +144,7 @@ export class Generator {
             }
             
             // salary
-            if(this.useStreaming) {
+            if(this.streamIncoming) {
                 balance += payRate
             }else if(date.getDay() === 5) {
                 if(isPayWeek) {
@@ -153,7 +155,7 @@ export class Generator {
             }
             
             // subtract today's bills
-            if(this.useStreaming) {
+            if(this.streamOutgoing) {
                 balance -= this.bills.dailyTotalStreaming
             }else{
                 balance -= this.bills.dailyTotalNonStreaming(dayOfMonth)

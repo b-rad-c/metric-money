@@ -2,7 +2,8 @@ import { TransactionList } from "../DataGenerator"
 
 const DefalultPreset = {
     name: "Default",
-    useStreaming: false,
+    streamIncoming: false,
+    streamOutgoing: false,
     useDeFi: false,
     startDate: new Date('Jan 01, 2022'),
     simDuration: {years: 1},
@@ -23,7 +24,8 @@ const DefalultPreset = {
 
 const TestPreset = {
     name: "Test",
-    useStreaming: false,
+    streamIncoming: false,
+    streamOutgoing: false,
     useDeFi: false,
     startDate: new Date('Jan 01, 2022'),
     simDuration: {years: 1},
