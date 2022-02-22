@@ -1,7 +1,6 @@
 import { add, format, formatDuration } from 'date-fns'
 import { clamp } from 'lodash'
 import { Stack, Button, ButtonGroup, Card, Form, Container, Row, Col, Table, FloatingLabel } from 'react-bootstrap';
-import { stackGap } from './Chart.js';
 import PresetList from './Presets.js';
 
 
@@ -40,136 +39,56 @@ const simYears = props.state.simDuration.years
 const startDate = props.state.startDate
 const disableSubYear = simYears === 1
 const disableAddYear = simYears === 10
-const startDateHandler = (offset) => { props.updateState('startDate', add(startDate, offset)) }
+const adjustDate = (offset) => { props.updateState('startDate', add(startDate, offset)) }
 const simDurationHandler = (years) => { props.updateState('simDuration', {years: years}) }
-return (
-<Card className="center-text">
-    <Card.Title>Simulation</Card.Title>
-    <Card.Body>
-        <Stack direction="vertical" gap={2}>
-           
-            <Stack direction="horizontal" gap={0}>
-                <Stack className="center-margin" direction="horizontal" gap={1}>
-                    <Button size="sm" onClick={() => { startDateHandler({months: -1}) }}>-</Button>
-                    {format(startDate, 'MMM')}
-                    <Button size="sm" onClick={() => { startDateHandler({months: 1}) }}>+</Button>
-                </Stack>
-                <Stack className="center-margin" direction="horizontal" gap={1}>
-                    <ButtonGroup size="sm">
-                        <Button onClick={() => { startDateHandler({days: -7}) }}>-7</Button>
-                        <Button onClick={() => { startDateHandler({days: -1}) }}>-1</Button>
-                    </ButtonGroup>
-                    {format(startDate, 'do')}
-                    <ButtonGroup size="sm">
-                        <Button onClick={() => { startDateHandler({days: 1}) }}>+1</Button>
-                        <Button onClick={() => { startDateHandler({days: 7}) }}>+7</Button>
-                    </ButtonGroup>
-                </Stack>
-                <Stack className="center-margin" direction="horizontal" gap={1}>
-                    <Button size="sm" onClick={() => { startDateHandler({years: -1}) }}>-</Button>
-                    {format(startDate, 'yyyy')}
-                    <Button size="sm" onClick={() => { startDateHandler({years: 1}) }}>+</Button>
-                </Stack>
-            </Stack>
-
-            <strong>duration</strong>
-            <Stack className="center-margin" direction="horizontal" gap={3}>
-                <Button disabled={disableSubYear} size="sm" onClick={() => { simDurationHandler(simYears - 1) }}>-</Button>
-                {formatDuration(props.state.simDuration)}
-                <Button disabled={disableAddYear} size="sm" onClick={() => { simDurationHandler(simYears + 1) }}>+</Button>
-            </Stack>
-        </Stack>
-    </Card.Body>
-</Card>
-)
-}
-
-export function GraphOptions (props) {
-const showPayCheckLinesHandler = (e) => { props.updateState('showPayCheckLines', e.target.checked) }
-const fitToScreenHandler = (e) => { props.updateState('fitToScreen', e.target.checked) }
-return (
-<Card>
-    <Card.Title className="center-text">Graph options</Card.Title>
-    <Card.Body>
-        <Form>
-            <FloatingLabel label="Select a graph preset">
-                <Form.Select onChange={props.selectedPresetHandler} value={props.selectedPreset}>
-                    <option value={-1} disabled></option>
-                    { 
-                        PresetList.map((preset, index) => {
-                            return <option key={index} value={index}>{preset.name}</option>
-                        })
-                    }
-                </Form.Select>
-            </FloatingLabel>
-
-            <Form.Switch className="center-margin" label="fit on screen" onChange={fitToScreenHandler} checked={props.state.fitToScreen}/>
-            <Form.Switch className="center-margin" label="show paychecks" onChange={showPayCheckLinesHandler} checked={props.state.showPayCheckLines}/>
-        </Form>
-    </Card.Body>
-</Card>
-)
-}
-
-export function ResultWidget (props) {
-return (
-<Card>
-    <Card.Title className="center-text">Results</Card.Title>
-    <Card.Body>
-        <Container className="center-margin">
-            <Row>
-                <Col><strong>final balance:</strong></Col><Col>{formatUSD(props.chartData.finalBalance)}</Col>
-            </Row>
-            <Row>
-                <Col><strong>paychecks:</strong></Col><Col>{ props.chartData.payChecks.length }</Col>
-            </Row>
-            <Row>
-                <Col><strong>interest earned:</strong></Col><Col>{ formatUSD(props.chartData.interestEarned) }</Col>
-            </Row>
-            <Row>
-                <Col><strong>interest paid:</strong></Col><Col>{ formatUSD(props.chartData.interestPaid) }</Col>
-            </Row>
-        </Container>
-    </Card.Body>
-</Card>
-)
-}
-
-//
-// bottom row
-//
-
-export function FinanceWidget (props) {
-const streamIncomingHandler = (e) => { props.updateState('streamIncoming', e.target.checked) }
-const useDeFiHandler = (e) => { props.updateState('useDeFi', e.target.checked); }
 const salaryHandler = (num) => { props.updateState('salary', props.state.salary + num) }
 const startBalanceHandler = (num) => { props.updateState('startBalance', props.state.startBalance + num) }
+const spacer = {marginTop: '1rem'}
 return (
-<Card className="center-text">
-    <Card.Title>Finance</Card.Title>
+<Card style={{ width: '35rem' }}>
+    <Card.Title>Simulation</Card.Title>
     <Card.Body>
-        <Container style={{textAlign: 'left'}}>
-            <Form.Switch label="Stream income" onChange={streamIncomingHandler} checked={props.state.streamIncoming}/>
-        </Container>
-        
         <Container>
+            <Row><Col><strong>start date</strong></Col></Row>
             <Row>
-                <Col style={{textAlign: 'left'}}><Form.Switch label="DeFi" onChange={useDeFiHandler} checked={props.state.useDefi}/></Col>
-                <Col><strong>savings rate:</strong> { formatRate(props.chartData.savingsRate) }</Col>
-                <Col><strong>credit rate:</strong>{ formatRate(props.chartData.creditRate) }</Col>
-            </Row>
-            <Row style={{marginTop: '1rem'}}>
-                <Col className="center-text"><strong>Salary</strong></Col>
-            </Row>
-            <Row>
+                <Col className='text-end'>
+                    <ButtonGroup size="sm">
+                        <Button onClick={() => { adjustDate({years: -1}) }}>yr</Button>
+                        <Button onClick={() => { adjustDate({months: -1}) }}>mon</Button>
+                        <Button onClick={() => { adjustDate({weeks: -1}) }}>wk</Button>
+                        <Button onClick={() => { adjustDate({days: -1}) }}>day</Button>
+                    </ButtonGroup>
+                </Col>
                 <Col>
+                    {format(startDate, 'MMM dd, yyyy')}
+                </Col>
+                <Col className='text-start'>
+                    <ButtonGroup size="sm">
+                        <Button onClick={() => { adjustDate({days: 1}) }}>day</Button>
+                        <Button onClick={() => { adjustDate({weeks: 1}) }}>wk</Button>
+                        <Button onClick={() => { adjustDate({months: 1}) }}>mon</Button>
+                        <Button onClick={() => { adjustDate({years: 1}) }}>yr</Button>
+                    </ButtonGroup>
+                </Col>
+            </Row>
+
+            <Row style={spacer}><Col><strong>duration</strong></Col></Row>
+            <Row>
+                <Col className='text-end'><Button disabled={disableSubYear} size="sm" onClick={() => { simDurationHandler(simYears - 1) }}>&#8592;</Button></Col>
+                <Col>{formatDuration(props.state.simDuration)}</Col>
+                <Col className='text-start'><Button disabled={disableAddYear} size="sm" onClick={() => { simDurationHandler(simYears + 1) }}>&#8594;</Button></Col>
+            </Row>
+
+            <Row style={spacer}><Col><strong>salary</strong></Col></Row>
+            <Row>
+                <Col className='text-end'>
                     <ButtonGroup size="sm">
                         <Button onClick={() => { salaryHandler(-1000) }}>-$1k</Button>
                         <Button onClick={() => { salaryHandler(-100) }}>-$100</Button>
                     </ButtonGroup>
                 </Col>
                 <Col>{formatUSD(props.state.salary)}</Col>
-                <Col>
+                <Col className='text-start'>
                     <ButtonGroup size="sm">
                         <Button onClick={() => { salaryHandler(100) }}>+$100</Button>
                         <Button onClick={() => { salaryHandler(1000) }}>+$1k</Button>
@@ -177,18 +96,16 @@ return (
                 </Col>
             </Row>
 
+            <Row style={spacer}><Col><strong>Start balance</strong></Col></Row>
             <Row>
-                <Col className="center-text"><strong>Start balance</strong></Col>
-            </Row>
-            <Row>
-                <Col>
+                <Col className='text-end'>
                     <ButtonGroup size="sm">
                         <Button onClick={() => { startBalanceHandler(-1000) }}>-$1k</Button>
                         <Button onClick={() => { startBalanceHandler(-100) }}>-$100</Button>
                     </ButtonGroup>
                 </Col>
                 <Col>{formatUSD(props.state.startBalance)}</Col>
-                <Col>
+                <Col className='text-start'>
                     <ButtonGroup size="sm">
                         <Button onClick={() => { startBalanceHandler(100) }}>+$100</Button>
                         <Button onClick={() => { startBalanceHandler(1000) }}>+$1k</Button>
@@ -204,12 +121,11 @@ return (
 export function BillsInput (props) {
 const costHandler = (name, num) => { props.updateState(name, props.state[name] + num) }
 const dueHandler = (name, day) => { props.updateState(name, clamp(props.state[name] + day, 1, 27)) }
-const streamOutgoingHandler = (e) => { props.updateState('streamOutgoing', e.target.checked) }
+const stackGap = 2
 return (
-<Card className="center-text">
+<Card style={{ width: '30rem' }}>
     <Card.Title>Bills</Card.Title>
     <Card.Body>
-        <Form.Switch style={{textAlign: 'left'}} label="Stream bill payment" onChange={streamOutgoingHandler} checked={props.state.streamOutgoing}/>
         <Table>
             <thead>
                 <tr>
@@ -294,11 +210,65 @@ return (
 )
 }
 
-export function ExpensesWidget (props) {
+export function GraphOptions (props) {
+const showPayCheckLinesHandler = (e) => { props.updateState('showPayCheckLines', e.target.checked) }
+const fitToScreenHandler = (e) => { props.updateState('fitToScreen', e.target.checked) }
+const streamIncomingHandler = (e) => { props.updateState('streamIncoming', e.target.checked) }
+const useDeFiHandler = (e) => { props.updateState('useDeFi', e.target.checked); }
+const streamOutgoingHandler = (e) => { props.updateState('streamOutgoing', e.target.checked) }
+return (
+<Card style={{ width: '18rem' }}>
+    <Card.Title>Graph options</Card.Title>
+    <Card.Body className="text-start">
+        <Form>
+            <FloatingLabel label="Select a graph preset">
+                <Form.Select onChange={props.selectedPresetHandler} value={props.selectedPreset}>
+                    <option value={-1} disabled></option>
+                    { 
+                        PresetList.map((preset, index) => {
+                            return <option key={index} value={index}>{preset.name}</option>
+                        })
+                    }
+                </Form.Select>
+            </FloatingLabel>
+
+            <Form.Switch label="fit on screen" onChange={fitToScreenHandler} checked={props.state.fitToScreen}/>
+            <Form.Switch label="show paychecks" onChange={showPayCheckLinesHandler} checked={props.state.showPayCheckLines}/>
+            <Form.Switch label="Stream income" onChange={streamIncomingHandler} checked={props.state.streamIncoming}/>
+            <Form.Switch label="Stream bill payment" onChange={streamOutgoingHandler} checked={props.state.streamOutgoing}/>
+            <Form.Switch label="DeFi" onChange={useDeFiHandler} checked={props.state.useDefi}/>
+
+            <strong>savings rate:</strong> { formatRate(props.chartData.savingsRate) }<br />
+            <strong>credit rate:</strong> { formatRate(props.chartData.creditRate) }
+        </Form>
+    </Card.Body>
+</Card>
+)
+}
+
+export function ResultWidget (props) {
 const items = props.state.unexpectedTrans.items
 const haveTransactions = items.length > 0
 return (
-<Card className="center-text">
+<Card style={{ width: '23rem' }}>
+    <Card.Title>Results</Card.Title>
+    <Card.Body>
+        <Container className="text-start">
+            <Row>
+                <Col><strong>final balance:</strong></Col><Col>{formatUSD(props.chartData.finalBalance)}</Col>
+            </Row>
+            <Row>
+                <Col><strong>paychecks:</strong></Col><Col>{ props.chartData.payChecks.length }</Col>
+            </Row>
+            <Row>
+                <Col><strong>interest earned:</strong></Col><Col>{ formatUSD(props.chartData.interestEarned) }</Col>
+            </Row>
+            <Row>
+                <Col><strong>interest paid:</strong></Col><Col>{ formatUSD(props.chartData.interestPaid) }</Col>
+            </Row>
+        </Container>
+    </Card.Body>
+
     <Card.Title>Unexpected expenses</Card.Title>
     <Card.Body>
         {
@@ -321,4 +291,3 @@ return (
 </Card>
 )
 }
-

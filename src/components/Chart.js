@@ -1,13 +1,11 @@
 import React, { useState, useMemo } from 'react';
-import { CardGroup } from 'react-bootstrap';
+import { Stack } from 'react-bootstrap';
 import PresetList from './Presets';
 import { Bill, BillList, Generator, Transaction, TransactionList } from '../DataGenerator';
 import { 
-  SimulationInput, 
-  FinanceWidget,
+  SimulationInput,
   BillsInput, 
   formatUSD, 
-  ExpensesWidget, 
   ResultWidget,
   GraphOptions 
 } from './Widgets'
@@ -23,7 +21,6 @@ import {
   ResponsiveContainer
 } from 'recharts';
 
-export const stackGap = 3
 
 function MetricMoneyChart() {
 
@@ -114,9 +111,9 @@ function MetricMoneyChart() {
       // line chart 
       //
     }
-    <div className="center-margin" style={{width: "100%", overflowX: "scroll"}}>
+    <div style={{width: "100%", overflowX: "scroll"}}>
 
-      <ResponsiveContainer className="center-margin" width={chartWidth} height={400}>
+      <ResponsiveContainer width={chartWidth} height={400}>
         <AreaChart data={chartData.balanceData} margin={chartMargin} onClick={unexpectedHandler}>
           <XAxis dataKey="label" ticks={chartData.months} tickFormatter={dateTickFormatter} interval="preserveEnd" tickMargin={10} minTickGap={5} angle={0} />
           <YAxis tickFormatter={(value) => formatUSD(value)} />
@@ -152,37 +149,29 @@ function MetricMoneyChart() {
       //
     }
 
-    <CardGroup>
+    <Stack className="align-items-start justify-content-center" direction="horizontal" gap={3}>
       <SimulationInput 
         state={state} 
+        updateState={updateState} />
+
+      <BillsInput
+        state={state}
         updateState={updateState} />
 
       <GraphOptions
         state={state}
         updateState={updateState}
         selectedPreset={selectedPreset}
-        selectedPresetHandler={selectedPresetHandler} />
+        selectedPresetHandler={selectedPresetHandler} 
+        chartData={chartData} />
       
-      <ResultWidget
+      <ResultWidget 
         state={state}
         updateState={updateState}
         chartData={chartData} />
 
-    </CardGroup>
+    </Stack>
 
-    <CardGroup>
-      <FinanceWidget 
-        state={state}
-        updateState={updateState} 
-        chartData={chartData} />
-
-      <BillsInput
-        state={state}
-        updateState={updateState} />
-
-      <ExpensesWidget 
-        state={state} />
-    </CardGroup>
   </div>
   );
 }
