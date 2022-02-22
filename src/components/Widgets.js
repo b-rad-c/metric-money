@@ -10,7 +10,7 @@ import PresetList from './Presets.js';
 
 export function formatRate (rate) { 
     const num = rate * 100
-    return num.toFixed(1) + '%' 
+    return num.toFixed(2) + '%' 
 }
 
 const USDFormatter = new Intl.NumberFormat('en-EN', { style: 'currency', currency: 'USD' })
@@ -45,7 +45,7 @@ const salaryHandler = (num) => { props.updateState('salary', props.state.salary 
 const startBalanceHandler = (num) => { props.updateState('startBalance', props.state.startBalance + num) }
 const spacer = {marginTop: '1rem'}
 return (
-<Card style={{ width: '35rem' }}>
+<Card className="shadow" style={{ width: '35rem' }}>
     <Card.Title>Simulation</Card.Title>
     <Card.Body>
         <Container>
@@ -123,7 +123,7 @@ const costHandler = (name, num) => { props.updateState(name, props.state[name] +
 const dueHandler = (name, day) => { props.updateState(name, clamp(props.state[name] + day, 1, 27)) }
 const stackGap = 2
 return (
-<Card style={{ width: '30rem' }}>
+<Card className="shadow" style={{ width: '30rem' }}>
     <Card.Title>Bills</Card.Title>
     <Card.Body>
         <Table>
@@ -216,12 +216,13 @@ const fitToScreenHandler = (e) => { props.updateState('fitToScreen', e.target.ch
 const streamIncomingHandler = (e) => { props.updateState('streamIncoming', e.target.checked) }
 const useDeFiHandler = (e) => { props.updateState('useDeFi', e.target.checked); }
 const streamOutgoingHandler = (e) => { props.updateState('streamOutgoing', e.target.checked) }
+const stableCurrencyHandler = (e) => { props.updateState('stableCurrency', e.target.checked) }
 return (
-<Card style={{ width: '18rem' }}>
-    <Card.Title>Graph options</Card.Title>
+<Card className="shadow" style={{ width: '17rem' }}>
+    <Card.Title>Options</Card.Title>
     <Card.Body className="text-start">
         <Form>
-            <FloatingLabel label="Select a graph preset">
+            <FloatingLabel label="Select a graph preset" style={{marginBottom: '1rem'}}>
                 <Form.Select onChange={props.selectedPresetHandler} value={props.selectedPreset}>
                     <option value={-1} disabled></option>
                     { 
@@ -236,12 +237,16 @@ return (
             <Form.Switch label="show paychecks" onChange={showPayCheckLinesHandler} checked={props.state.showPayCheckLines}/>
             <Form.Switch label="Stream income" onChange={streamIncomingHandler} checked={props.state.streamIncoming}/>
             <Form.Switch label="Stream bill payment" onChange={streamOutgoingHandler} checked={props.state.streamOutgoing}/>
+            <Form.Switch label="Stable currency" onChange={stableCurrencyHandler} checked={props.state.stableCurrency}/>
             <Form.Switch label="DeFi" onChange={useDeFiHandler} checked={props.state.useDefi}/>
-
-            <strong>savings rate:</strong> { formatRate(props.chartData.savingsRate) }<br />
-            <strong>credit rate:</strong> { formatRate(props.chartData.creditRate) }
         </Form>
+        
     </Card.Body>
+    <Container className="text-start" style={{marginBottom: '1rem'}}>
+        <Row><Col><strong>savings rate:</strong>  </Col><Col>{formatRate(props.chartData.savingsRate)}  </Col></Row>
+        <Row><Col><strong>credit rate:</strong>   </Col><Col>{formatRate(props.chartData.creditRate)}   </Col></Row>
+        <Row><Col><strong>inflation rate:</strong></Col><Col>{formatRate(props.chartData.inflationRate)}</Col></Row>
+    </Container>
 </Card>
 )
 }
@@ -250,7 +255,7 @@ export function ResultWidget (props) {
 const items = props.state.unexpectedTrans.items
 const haveTransactions = items.length > 0
 return (
-<Card style={{ width: '23rem' }}>
+<Card className="shadow" style={{ width: '23rem' }}>
     <Card.Title>Results</Card.Title>
     <Card.Body>
         <Container className="text-start">

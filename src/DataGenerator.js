@@ -83,12 +83,14 @@ export class Generator {
 
         this.streamIncoming = false
         this.streamOutgoing = false
+        this.stableCurrency = false
         this.useDeFi = false
 
         this.tradFiCreditRate = .17
         this.tradFiSavingsRate = .007
         this.deFiCreditRate = .1
         this.deFiSavingsRate = .10
+        this.inflationRate = 0.0
         
         this.fitToScreen = false
 
@@ -101,9 +103,10 @@ export class Generator {
         this.salary = salary
     }
 
-    configFinance(streamIncoming, streamOutgoing, useDeFi) {
+    configFinance(streamIncoming, streamOutgoing, stableCurrency, useDeFi) {
         this.streamIncoming = streamIncoming
         this.streamOutgoing = streamOutgoing
+        this.stableCurrency = stableCurrency
         this.useDeFi = useDeFi
     }
 
@@ -123,6 +126,7 @@ export class Generator {
 
         result.creditRate = this.useDeFi ? this.deFiCreditRate : this.tradFiCreditRate
         result.savingsRate = this.useDeFi ? this.deFiSavingsRate : this.tradFiSavingsRate
+        result.inflationRate = this.stableCurrency ? 0.0 : 0.0025
 
         let balance = this.startBalance
         let isPayWeek = true
@@ -202,6 +206,7 @@ class GeneratorResult {
         this.finalBalance = 0.0
         this.creditRate = 0.0
         this.interestPaid = 0.0
+        this.inflationRate = 0.0
         this.savingsRate = 0.0
         this.interestEarned = 0.0
         this.bkgdIntervals = []

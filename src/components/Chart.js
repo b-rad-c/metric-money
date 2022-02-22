@@ -111,7 +111,7 @@ function MetricMoneyChart() {
       // line chart 
       //
     }
-    <div style={{width: "100%", overflowX: "scroll"}}>
+    <div className='border shadow' style={{margin: '0 auto', marginBottom: '2rem', width: "98%", overflowX: "scroll"}}>
 
       <ResponsiveContainer width={chartWidth} height={400}>
         <AreaChart data={chartData.balanceData} margin={chartMargin} onClick={unexpectedHandler}>
@@ -150,6 +150,7 @@ function MetricMoneyChart() {
     }
 
     <Stack className="align-items-start justify-content-center" direction="horizontal" gap={3}>
+
       <SimulationInput 
         state={state} 
         updateState={updateState} />
