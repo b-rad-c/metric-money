@@ -6,9 +6,20 @@ export class Bill {
         this.name = name
         this.amount = amount
         this.dayOfMonth = dayOfMonth
-        this.perSec = monthlyToStreaming(amount)
-        this.dailyTotalStreaming = this.perSec * secondsPerDay
     }
+
+    perSec() {
+        return monthlyToStreaming(this.amount)
+    }
+
+    dailyTotalStreaming() {
+        return this.perSec() * secondsPerDay
+    }
+
+    inflate(rate) {
+        this.amount = this.amount * rate
+    }
+
 }
 
 export class BillList {
@@ -22,8 +33,14 @@ export class BillList {
             this.lookup[bill.dayOfMonth].push(bill)
         })
 
-        this.dailyTotalStreaming = reduce(bills, (acc, bill) => { return acc + bill.dailyTotalStreaming }, 0)
+    }
 
+    inflate(rate) {
+        this.bills.forEach((bill) => bill.inflate(rate))
+    }
+
+    dailyTotalStreaming() {
+        return reduce(this.bills, (acc, bill) => { return acc + bill.dailyTotalStreaming() }, 0)
     }
 
     dailyTotalNonStreaming(dayOfMonth) {
@@ -126,7 +143,8 @@ export class Generator {
 
         result.creditRate = this.useDeFi ? this.deFiCreditRate : this.tradFiCreditRate
         result.savingsRate = this.useDeFi ? this.deFiSavingsRate : this.tradFiSavingsRate
-        result.inflationRate = this.stableCurrency ? 0.0 : 0.0025
+        result.inflationRate = this.stableCurrency ? 0.0 : 0.025
+        const dailyInflation = 1 + (result.inflationRate / 365)
 
         let balance = this.startBalance
         let isPayWeek = true
@@ -160,7 +178,7 @@ export class Generator {
             
             // subtract today's bills
             if(this.streamOutgoing) {
-                balance -= this.bills.dailyTotalStreaming
+                balance -= this.bills.dailyTotalStreaming()
             }else{
                 balance -= this.bills.dailyTotalNonStreaming(dayOfMonth)
             }
@@ -187,11 +205,14 @@ export class Generator {
                 }
             }
             
-
             result.balanceData.push({balance: balance, label: label})
+
+            if(dailyInflation > 0.0) this.bills.inflate(dailyInflation)
         })
 
         result.finalBalance = balance
+        result.finalHousing = this.bills.bills[0].amount
+        console.log('final housing', result.finalHousing)
         result.finalize()
         return result
     }
@@ -210,6 +231,8 @@ class GeneratorResult {
         this.savingsRate = 0.0
         this.interestEarned = 0.0
         this.bkgdIntervals = []
+
+        this.finalHousing = 0
     }
 
     finalize() {

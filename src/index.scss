@@ -1,5 +1,6 @@
 // bootstrap overrides
 $primary: #0d6efd;
+$light: #e9ecef;
 
 @import "~bootstrap/scss/bootstrap";
 
@@ -17,7 +18,7 @@ body {
   background-color: rgba(var(--bs-primary-rgb), var(--bs-bg-opacity)) !important;
 }
 
-.app {
+.app{
   width: 100vw;
   height: 100vh;
 }

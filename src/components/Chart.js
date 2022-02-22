@@ -67,7 +67,7 @@ function MetricMoneyChart() {
     ])
     const generator = new Generator()
     generator.configSalary(state.startBalance, state.salary)
-    generator.configFinance(state.streamIncoming, state.streamOutgoing, state.useDeFi)
+    generator.configFinance(state.streamIncoming, state.streamOutgoing, state.stableCurrency, state.useDeFi)
     generator.configChart(state.fitToScreen)
     generator.expenses(bills, state.unexpectedTrans)
     return generator.run(state.startDate, state.simDuration)

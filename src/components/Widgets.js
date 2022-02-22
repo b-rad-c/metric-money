@@ -45,7 +45,7 @@ const salaryHandler = (num) => { props.updateState('salary', props.state.salary 
 const startBalanceHandler = (num) => { props.updateState('startBalance', props.state.startBalance + num) }
 const spacer = {marginTop: '1rem'}
 return (
-<Card className="bg-ligh bg-gradient shadow-lg" style={{ width: '35rem' }}>
+<Card className="bg-light bg-gradient shadow-lg" style={{ width: '35rem' }}>
     <Card.Title>Simulation</Card.Title>
     <Card.Body>
         <Container>
