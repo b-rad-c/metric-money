@@ -108,12 +108,15 @@ function MetricMoneyChart() {
 
   return (
   <div>
+  
     {
       // 
       // line chart 
       //
     }
-    <div className='border shadow bg-light' style={{margin: '0 auto', marginBottom: '2rem', width: "98%", overflowX: "scroll"}}>
+    <div className='border shadow-lg bg-light bg-gradient' style={{margin: '1rem auto', width: "98%", overflowX: "scroll"}}>
+
+      <h1>Metric Money</h1>
 
       <ResponsiveContainer width={chartWidth} height={400}>
         <AreaChart data={chartData.balanceData} margin={chartMargin} onClick={unexpectedHandler}>
