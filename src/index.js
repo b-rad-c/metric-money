@@ -6,7 +6,7 @@ import MetricMoneyChart from './components/Chart.js'
 function MetricMoney() {
 
   return (
-    <div className="text-center">
+    <div className="app text-center bg-primary bg-gradient">
       <h1>Metric Money</h1>
       <MetricMoneyChart />
     </div>

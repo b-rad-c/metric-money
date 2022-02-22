@@ -45,7 +45,7 @@ const salaryHandler = (num) => { props.updateState('salary', props.state.salary 
 const startBalanceHandler = (num) => { props.updateState('startBalance', props.state.startBalance + num) }
 const spacer = {marginTop: '1rem'}
 return (
-<Card className="shadow" style={{ width: '35rem' }}>
+<Card className="bg-light shadow" style={{ width: '35rem' }}>
     <Card.Title>Simulation</Card.Title>
     <Card.Body>
         <Container>
@@ -123,7 +123,7 @@ const costHandler = (name, num) => { props.updateState(name, props.state[name] +
 const dueHandler = (name, day) => { props.updateState(name, clamp(props.state[name] + day, 1, 27)) }
 const stackGap = 2
 return (
-<Card className="shadow" style={{ width: '30rem' }}>
+<Card className="bg-light shadow" style={{ width: '30rem' }}>
     <Card.Title>Bills</Card.Title>
     <Card.Body>
         <Table>
@@ -218,7 +218,7 @@ const useDeFiHandler = (e) => { props.updateState('useDeFi', e.target.checked); 
 const streamOutgoingHandler = (e) => { props.updateState('streamOutgoing', e.target.checked) }
 const stableCurrencyHandler = (e) => { props.updateState('stableCurrency', e.target.checked) }
 return (
-<Card className="shadow" style={{ width: '17rem' }}>
+<Card className="bg-light shadow" style={{ width: '17rem' }}>
     <Card.Title>Options</Card.Title>
     <Card.Body className="text-start">
         <Form>
@@ -255,7 +255,7 @@ export function ResultWidget (props) {
 const items = props.state.unexpectedTrans.items
 const haveTransactions = items.length > 0
 return (
-<Card className="shadow" style={{ width: '23rem' }}>
+<Card className="bg-light shadow" style={{ width: '23rem' }}>
     <Card.Title>Results</Card.Title>
     <Card.Body>
         <Container className="text-start">

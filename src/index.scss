@@ -1,6 +1,5 @@
 // bootstrap overrides
-$primary: rgb(94, 94, 94);
-$secondary: rgba(125, 125, 125, .1);
+$primary: #0d6efd;
 
 @import "~bootstrap/scss/bootstrap";
 
@@ -11,4 +10,25 @@ body {
       sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+
+.bg-primary {
+  --bs-bg-opacity: .8;
+  background-color: rgba(var(--bs-primary-rgb), var(--bs-bg-opacity)) !important;
+}
+
+.app {
+  width: 100vw;
+  height: 100vh
+}
+
+:export {
+  primary: $primary;
+  secondary: $secondary;
+  success: $success;
+  danger: $danger;
+  warning: $warning;
+  info: $info;
+  light: $light;
+  dark: $dark;
 }

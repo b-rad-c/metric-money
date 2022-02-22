@@ -21,6 +21,8 @@ import {
   ResponsiveContainer
 } from 'recharts';
 
+import variables from '../index.scss';
+
 
 function MetricMoneyChart() {
 
@@ -111,7 +113,7 @@ function MetricMoneyChart() {
       // line chart 
       //
     }
-    <div className='border shadow' style={{margin: '0 auto', marginBottom: '2rem', width: "98%", overflowX: "scroll"}}>
+    <div className='border shadow bg-light' style={{margin: '0 auto', marginBottom: '2rem', width: "98%", overflowX: "scroll"}}>
 
       <ResponsiveContainer width={chartWidth} height={400}>
         <AreaChart data={chartData.balanceData} margin={chartMargin} onClick={unexpectedHandler}>
@@ -126,14 +128,14 @@ function MetricMoneyChart() {
 
           { // pay check reference lines
             state.showPayCheckLines && chartData.payChecks.map((payDate, index) => (
-              <ReferenceLine key={index} x={payDate} stroke="green" strokeDasharray="0" strokeWidth={2} />
+              <ReferenceLine key={index} x={payDate} stroke={variables.success} strokeDasharray="0" strokeWidth={2} />
             ))
           }
 
           <defs>
             <linearGradient id="splitColor" x1="0" y1="0" x2="0" y2="1">
-              <stop offset={gradientOffset} stopColor="green" stopOpacity={1} />
-              <stop offset={gradientOffset} stopColor="red" stopOpacity={1} />
+              <stop offset={gradientOffset} stopColor={variables.success} stopOpacity={1} />
+              <stop offset={gradientOffset} stopColor={variables.danger} stopOpacity={1} />
             </linearGradient>
           </defs>
           
