@@ -88,7 +88,8 @@ function MetricMoneyChart() {
 
   const dateTickFormatter = (label, index) => { return (label.startsWith('Jan') || index === 0) ? label : label.substring(0, label.length - 8) }
 
-  const gradientOffset = useMemo(() => { // used to color area chart green or red
+  // used to color area chart green or red for positive/negative
+  const gradientOffset = useMemo(() => { 
     const dataMax = Math.max(...chartData.balanceData.map((i) => i.balance));
     const dataMin = Math.min(...chartData.balanceData.map((i) => i.balance));
   
@@ -101,6 +102,40 @@ function MetricMoneyChart() {
     return dataMax / (dataMax - dataMin)
 
   }, [chartData])
+
+  const yAxis = useMemo(() => {
+    const max = Math.max(chartData.finalBalance, state.startBalance)
+    let domain;
+    let ticks;
+    let overflow;
+
+    if(max <= 5000) {
+      domain = [-1000, 5000]
+      ticks = [-1000, 0, 2500, 5000]
+      overflow = true
+    }else if(max <= 15000) {
+      domain = [-1000, 15000]
+      ticks = [-1000, 0, 5000, 10000, 15000]
+      overflow = true
+    }else if(max <= 25000) {
+      domain = [-1000, 25000]
+      ticks = [-1000, 0, 5000, 15000, 25000]
+      overflow = true
+    }else if(max <= 50000) {
+      domain = [-2500, 50000]
+      ticks = [-2500, 0, 10000, 20000, 30000, 40000, 50000]
+      overflow = true
+    }else{
+      domain = [-5000, 100000]
+      ticks = [-5000, 0, 250000, 50000, 75000, 100000]
+      overflow = true
+    }
+    
+
+    return {domain, ticks, overflow}
+  }, [state, chartData])
+
+  
 
   //
   // render
@@ -121,7 +156,7 @@ function MetricMoneyChart() {
       <ResponsiveContainer width={chartWidth} height={400}>
         <AreaChart data={chartData.balanceData} margin={chartMargin} onClick={unexpectedHandler}>
           <XAxis dataKey="label" ticks={chartData.months} tickFormatter={dateTickFormatter} interval="preserveEnd" tickMargin={10} minTickGap={5} angle={0} />
-          <YAxis tickFormatter={(value) => formatUSD(value)} />
+          <YAxis tickFormatter={(value) => formatUSD(value)} domain={yAxis.domain} ticks={yAxis.ticks} allowDataOverflow={yAxis.overflow}/>
           <Tooltip formatter={(value, name) => [formatUSD(value), name]} />
           { // alternating background for each month
             chartData.bkgdIntervals.map((bkgdInt, index) => (

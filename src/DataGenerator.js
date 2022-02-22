@@ -35,6 +35,10 @@ export class BillList {
 
     }
 
+    yearlyCostOfLiving() {
+        return reduce(this.bills, (acc, bill) => { return acc + bill.amount }, 0) * 12
+    }
+
     inflate(rate) {
         this.bills.forEach((bill) => bill.inflate(rate))
     }
@@ -145,6 +149,7 @@ export class Generator {
         result.savingsRate = this.useDeFi ? this.deFiSavingsRate : this.tradFiSavingsRate
         result.inflationRate = this.stableCurrency ? 0.0 : 0.025
         const dailyInflation = 1 + (result.inflationRate / 365)
+        result.costOfLivingStart = this.bills.yearlyCostOfLiving()
 
         let balance = this.startBalance
         let isPayWeek = true
@@ -210,10 +215,7 @@ export class Generator {
             if(dailyInflation > 0.0) this.bills.inflate(dailyInflation)
         })
 
-        result.finalBalance = balance
-        result.finalHousing = this.bills.bills[0].amount
-        console.log('final housing', result.finalHousing)
-        result.finalize()
+        result.finalize(balance, this.bills.yearlyCostOfLiving())
         return result
     }
 }
@@ -231,11 +233,17 @@ class GeneratorResult {
         this.savingsRate = 0.0
         this.interestEarned = 0.0
         this.bkgdIntervals = []
-
-        this.finalHousing = 0
+        this.costOfLivingStart = 0.0
+        this.costOfLivingEnd = 0.0
+        this.costOfLivingDiff = 0.0
+        this.costOfLivingChange = 0.0
     }
 
-    finalize() {
+    finalize(finalBalance, costOfLivingEnd) {
+        this.finalBalance = finalBalance
+        this.costOfLivingEnd = costOfLivingEnd
+        this.costOfLivingDiff = this.costOfLivingEnd - this.costOfLivingStart
+        this.costOfLivingChange = this.costOfLivingEnd / this.costOfLivingStart
         this.bkgdIntervals = chunk(this.months, 2)
     }
 }

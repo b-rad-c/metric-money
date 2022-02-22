@@ -29,9 +29,8 @@ export function formatOrdinal (num) {
     return `${num}${suffix}`;
 }
 
-
 //
-// top row
+// widgets
 //
 
 export function SimulationInput (props) {
@@ -46,39 +45,9 @@ const startBalanceHandler = (num) => { props.updateState('startBalance', props.s
 const spacer = {marginTop: '1rem'}
 return (
 <Card className="bg-light bg-gradient shadow-lg" style={{ width: '35rem' }}>
-    <Card.Title>Simulation</Card.Title>
+    <Card.Title>Financial situation</Card.Title>
     <Card.Body>
-        <Container>
-            <Row><Col><strong>start date</strong></Col></Row>
-            <Row>
-                <Col className='text-end'>
-                    <ButtonGroup size="sm">
-                        <Button onClick={() => { adjustDate({years: -1}) }}>yr</Button>
-                        <Button onClick={() => { adjustDate({months: -1}) }}>mon</Button>
-                        <Button onClick={() => { adjustDate({weeks: -1}) }}>wk</Button>
-                        <Button onClick={() => { adjustDate({days: -1}) }}>day</Button>
-                    </ButtonGroup>
-                </Col>
-                <Col>
-                    {format(startDate, 'MMM dd, yyyy')}
-                </Col>
-                <Col className='text-start'>
-                    <ButtonGroup size="sm">
-                        <Button onClick={() => { adjustDate({days: 1}) }}>day</Button>
-                        <Button onClick={() => { adjustDate({weeks: 1}) }}>wk</Button>
-                        <Button onClick={() => { adjustDate({months: 1}) }}>mon</Button>
-                        <Button onClick={() => { adjustDate({years: 1}) }}>yr</Button>
-                    </ButtonGroup>
-                </Col>
-            </Row>
-
-            <Row style={spacer}><Col><strong>duration</strong></Col></Row>
-            <Row>
-                <Col className='text-end'><Button disabled={disableSubYear} size="sm" onClick={() => { simDurationHandler(simYears - 1) }}>&#8592;</Button></Col>
-                <Col>{formatDuration(props.state.simDuration)}</Col>
-                <Col className='text-start'><Button disabled={disableAddYear} size="sm" onClick={() => { simDurationHandler(simYears + 1) }}>&#8594;</Button></Col>
-            </Row>
-
+    <Container>
             <Row style={spacer}><Col><strong>salary</strong></Col></Row>
             <Row>
                 <Col className='text-end'>
@@ -111,6 +80,40 @@ return (
                         <Button onClick={() => { startBalanceHandler(1000) }}>+$1k</Button>
                     </ButtonGroup>
                 </Col>
+            </Row>
+        </Container>
+    </Card.Body>
+    <Card.Title>Time</Card.Title>
+    <Card.Body>
+        <Container>
+            <Row><Col><strong>adjust start date</strong></Col></Row>
+            <Row>
+                <Col className='text-end'>
+                    <ButtonGroup size="sm">
+                        <Button onClick={() => { adjustDate({years: -1}) }}>yr</Button>
+                        <Button onClick={() => { adjustDate({months: -1}) }}>mon</Button>
+                        <Button onClick={() => { adjustDate({weeks: -1}) }}>wk</Button>
+                        <Button onClick={() => { adjustDate({days: -1}) }}>day</Button>
+                    </ButtonGroup>
+                </Col>
+                <Col>
+                    {format(startDate, 'MMM dd, yyyy')}
+                </Col>
+                <Col className='text-start'>
+                    <ButtonGroup size="sm">
+                        <Button onClick={() => { adjustDate({days: 1}) }}>day</Button>
+                        <Button onClick={() => { adjustDate({weeks: 1}) }}>wk</Button>
+                        <Button onClick={() => { adjustDate({months: 1}) }}>mon</Button>
+                        <Button onClick={() => { adjustDate({years: 1}) }}>yr</Button>
+                    </ButtonGroup>
+                </Col>
+            </Row>
+
+            <Row style={spacer}><Col><strong>duration</strong></Col></Row>
+            <Row>
+                <Col className='text-end'><Button disabled={disableSubYear} size="sm" onClick={() => { simDurationHandler(simYears - 1) }}>&#8592;</Button></Col>
+                <Col>{formatDuration(props.state.simDuration)}</Col>
+                <Col className='text-start'><Button disabled={disableAddYear} size="sm" onClick={() => { simDurationHandler(simYears + 1) }}>&#8594;</Button></Col>
             </Row>
         </Container>
     </Card.Body>
@@ -254,6 +257,7 @@ return (
 export function ResultWidget (props) {
 const items = props.state.unexpectedTrans.items
 const haveTransactions = items.length > 0
+const COLChange = props.chartData.costOfLivingDiff === 0.0 ? '-' : formatRate(props.chartData.costOfLivingChange)
 return (
 <Card className="bg-light bg-gradient shadow-lg" style={{ width: '23rem' }}>
     <Card.Title>Results</Card.Title>
@@ -270,6 +274,24 @@ return (
             </Row>
             <Row>
                 <Col><strong>interest paid:</strong></Col><Col>{ formatUSD(props.chartData.interestPaid) }</Col>
+            </Row>
+        </Container>
+    </Card.Body>
+
+    <Card.Title>Cost of Living</Card.Title>
+    <Card.Body>
+        <Container className="text-start">
+            <Row>
+                <Col><strong>first year:</strong></Col><Col>{ formatUSD(props.chartData.costOfLivingStart) }</Col>
+            </Row>
+            <Row>
+                <Col><strong>final year:</strong></Col><Col>{ formatUSD(props.chartData.costOfLivingEnd) }</Col>
+            </Row>
+            <Row>
+                <Col><strong>difference:</strong></Col><Col>+{ formatUSD(props.chartData.costOfLivingDiff) }</Col>
+            </Row>
+            <Row>
+                <Col><strong>change:</strong></Col><Col>{ COLChange }</Col>
             </Row>
         </Container>
     </Card.Body>
