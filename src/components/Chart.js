@@ -103,36 +103,30 @@ function MetricMoneyChart() {
 
   }, [chartData])
 
+  // set yAxis domain values to make the chart easier to read when making small adjustments
   const yAxis = useMemo(() => {
     const max = Math.max(chartData.finalBalance, state.startBalance)
     let domain;
     let ticks;
-    let overflow;
 
     if(max <= 5000) {
       domain = [-1000, 5000]
       ticks = [-1000, 0, 2500, 5000]
-      overflow = true
     }else if(max <= 15000) {
       domain = [-1000, 15000]
       ticks = [-1000, 0, 5000, 10000, 15000]
-      overflow = true
     }else if(max <= 25000) {
       domain = [-1000, 25000]
       ticks = [-1000, 0, 5000, 15000, 25000]
-      overflow = true
     }else if(max <= 50000) {
       domain = [-2500, 50000]
       ticks = [-2500, 0, 10000, 20000, 30000, 40000, 50000]
-      overflow = true
     }else{
       domain = [-5000, 100000]
-      ticks = [-5000, 0, 250000, 50000, 75000, 100000]
-      overflow = true
+      ticks = [-5000, 0, 25000, 50000, 75000, 100000]
     }
-    
 
-    return {domain, ticks, overflow}
+    return {domain, ticks}
   }, [state, chartData])
 
   
@@ -156,7 +150,7 @@ function MetricMoneyChart() {
       <ResponsiveContainer width={chartWidth} height={400}>
         <AreaChart data={chartData.balanceData} margin={chartMargin} onClick={unexpectedHandler}>
           <XAxis dataKey="label" ticks={chartData.months} tickFormatter={dateTickFormatter} interval="preserveEnd" tickMargin={10} minTickGap={5} angle={0} />
-          <YAxis tickFormatter={(value) => formatUSD(value)} domain={yAxis.domain} ticks={yAxis.ticks} allowDataOverflow={yAxis.overflow}/>
+          <YAxis tickFormatter={(value) => formatUSD(value)} domain={yAxis.domain} ticks={yAxis.ticks} allowDataOverflow={true}/>
           <Tooltip formatter={(value, name) => [formatUSD(value), name]} />
           { // alternating background for each month
             chartData.bkgdIntervals.map((bkgdInt, index) => (
