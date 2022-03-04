@@ -3,11 +3,11 @@ import { Stack } from 'react-bootstrap';
 import PresetList from './Presets';
 import { Bill, BillList, Generator, Transaction, TransactionList } from '../DataGenerator';
 import { 
-  SimulationInput,
-  BillsInput, 
+  FinancialSituation,
+  Bills, 
   formatUSD, 
-  ResultWidget,
-  GraphOptions 
+  Result,
+  Options 
 } from './Widgets'
 
 import { 
@@ -185,22 +185,22 @@ function MetricMoneyChart() {
 
     <Stack className="align-items-start justify-content-center" direction="horizontal" gap={3}>
 
-      <SimulationInput 
+      <FinancialSituation 
         state={state} 
         updateState={updateState} />
 
-      <BillsInput
+      <Bills
         state={state}
         updateState={updateState} />
 
-      <GraphOptions
+      <Options
         state={state}
         updateState={updateState}
         selectedPreset={selectedPreset}
         selectedPresetHandler={selectedPresetHandler} 
         chartData={chartData} />
       
-      <ResultWidget 
+      <Result 
         state={state}
         updateState={updateState}
         chartData={chartData} />

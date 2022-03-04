@@ -33,7 +33,7 @@ export function formatOrdinal (num) {
 // widgets
 //
 
-export function SimulationInput (props) {
+export function FinancialSituation (props) {
 const simYears = props.state.simDuration.years
 const startDate = props.state.startDate
 const disableSubYear = simYears === 1
@@ -43,8 +43,9 @@ const simDurationHandler = (years) => { props.updateState('simDuration', {years:
 const salaryHandler = (num) => { props.updateState('salary', props.state.salary + num) }
 const startBalanceHandler = (num) => { props.updateState('startBalance', props.state.startBalance + num) }
 const spacer = {marginTop: '1rem'}
+
 return (
-<Card className="bg-light bg-gradient shadow-lg" style={{ width: '35rem' }}>
+<Card className="bg-light bg-gradient shadow-lg" style={{ width: '33rem' }}>
     <Card.Title>Financial situation</Card.Title>
     <Card.Body>
     <Container>
@@ -121,10 +122,12 @@ return (
 )
 }
 
-export function BillsInput (props) {
+export function Bills (props) {
 const costHandler = (name, num) => { props.updateState(name, props.state[name] + num) }
 const dueHandler = (name, day) => { props.updateState(name, clamp(props.state[name] + day, 1, 27)) }
 const stackGap = 2
+const costStyle = {width: '75px'}
+const dateStyle = {width: '35px'}
 return (
 <Card className="bg-light bg-gradient shadow-lg" style={{ width: '30rem' }}>
     <Card.Title>Bills</Card.Title>
@@ -143,14 +146,14 @@ return (
                     <td >
                         <Stack className="justify-content-center" direction="horizontal" gap={stackGap}>
                             <Button size="sm" onClick={() => { costHandler('housingCost', -50) }}>-</Button>
-                            {formatUSD(props.state.housingCost)}
+                            <span style={costStyle}>{formatUSD(props.state.housingCost)}</span>
                             <Button size="sm" onClick={() => { costHandler('housingCost', 50) }}>+</Button>
                         </Stack>
                     </td>
                     <td>
                         <Stack className="justify-content-center" direction="horizontal" gap={stackGap}>
                             <Button size="sm" onClick={() => { dueHandler('housingDue', -1) }}>-</Button>
-                            {formatOrdinal(props.state.housingDue)}
+                            <span style={dateStyle}>{formatOrdinal(props.state.housingDue)}</span>
                             <Button size="sm" onClick={() => { dueHandler('housingDue', 1) }}>+</Button>
                         </Stack>
                     </td>
@@ -160,14 +163,14 @@ return (
                     <td>
                         <Stack className="justify-content-center" direction="horizontal" gap={stackGap}>
                             <Button size="sm" onClick={() => { costHandler('carCost', -25) }}>-</Button>
-                            {formatUSD(props.state.carCost)}
+                            <span style={costStyle}>{formatUSD(props.state.carCost)}</span>
                             <Button size="sm" onClick={() => { costHandler('carCost', 25) }}>+</Button>
                         </Stack>
                     </td>
                     <td>
                         <Stack className="justify-content-center" direction="horizontal" gap={stackGap}>
                             <Button size="sm" onClick={() => { dueHandler('carDue', -1) }}>-</Button>
-                            {formatOrdinal(props.state.carDue)}
+                            <span style={dateStyle}>{formatOrdinal(props.state.carDue)}</span>
                             <Button size="sm" onClick={() => { dueHandler('carDue', 1) }}>+</Button>
                         </Stack>
                     </td>
@@ -177,14 +180,14 @@ return (
                     <td>
                         <Stack className="justify-content-center" direction="horizontal" gap={stackGap}>
                             <Button size="sm" onClick={() => { costHandler('electricCost', -15) }}>-</Button>
-                            {formatUSD(props.state.electricCost)}
+                            <span style={costStyle}>{formatUSD(props.state.electricCost)}</span>
                             <Button size="sm" onClick={() => { costHandler('electricCost', 15) }}>+</Button>
                         </Stack>
                     </td>
                     <td>
                         <Stack className="justify-content-center" direction="horizontal" gap={stackGap}>
                             <Button size="sm" onClick={() => { dueHandler('electricDue', -1) }}>-</Button>
-                            {formatOrdinal(props.state.electricDue)}
+                            <span style={dateStyle}>{formatOrdinal(props.state.electricDue)}</span>
                             <Button size="sm" onClick={() => { dueHandler('electricDue', 1) }}>+</Button>
                         </Stack>
                     </td>
@@ -194,14 +197,14 @@ return (
                     <td>
                         <Stack className="justify-content-center" direction="horizontal" gap={stackGap}>
                             <Button size="sm" onClick={() => { costHandler('waterCost', -15) }}>-</Button>
-                            {formatUSD(props.state.waterCost)}
+                            <span style={costStyle}>{formatUSD(props.state.waterCost)}</span>
                             <Button size="sm" onClick={() => { costHandler('waterCost', 15) }}>+</Button>
                         </Stack>
                     </td>
                     <td>
                         <Stack className="justify-content-center" direction="horizontal" gap={stackGap}>
                             <Button size="sm" onClick={() => { dueHandler('waterDue', -1) }}>-</Button>
-                            {formatOrdinal(props.state.waterDue)}
+                            <span style={dateStyle}>{formatOrdinal(props.state.waterDue)}</span>
                             <Button size="sm" onClick={() => { dueHandler('waterDue', 1) }}>+</Button>
                         </Stack>
                     </td>
@@ -213,7 +216,7 @@ return (
 )
 }
 
-export function GraphOptions (props) {
+export function Options (props) {
 const showPayCheckLinesHandler = (e) => { props.updateState('showPayCheckLines', e.target.checked) }
 const fitToScreenHandler = (e) => { props.updateState('fitToScreen', e.target.checked) }
 const streamIncomingHandler = (e) => { props.updateState('streamIncoming', e.target.checked) }
@@ -254,7 +257,7 @@ return (
 )
 }
 
-export function ResultWidget (props) {
+export function Result (props) {
 const items = props.state.unexpectedTrans.items
 const haveTransactions = items.length > 0
 const COLChange = props.chartData.costOfLivingDiff === 0.0 ? '-' : formatRate(props.chartData.costOfLivingChange)
