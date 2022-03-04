@@ -14,6 +14,7 @@ A charting app designed to the show the benefits of streaming money and decentra
     - `reset` & increment start year
 
 **Metric Money**
+
 *We have turned on streaming money and bill pay, a feature of some cryptocurrencies. Money streaming are contiuous (technically per second) income or payments. Traditionally, salary comes in chunks delivered every other friday and bills are paid based on the day of the month. These intervals are out of phase with each other, making payments difficult to predict.*
 + Flip bill/salary streaming on/off, notice the graph is smoother, resulting in easier budgeting
 + Notice how the adjustments made in the previous preset don't have as big of an effect (if any)  with streaming money 
@@ -32,10 +33,12 @@ A charting app designed to the show the benefits of streaming money and decentra
   - turn on the extra day option
 
 **Stable Currency**
+
 *This chart shows the stable currency option. Without it cost of living increases by 2.5% per year. Some stable coin cryptocurrencies elimate this by pegging their value to price indexes to protect consumers from inflation*
 + Turn the stable currency option on and off and notice the difference in final balance and cost of living.
     - The difference isn't too dramatic when looking at one year
     - Turn off stable currency and extend the simulation to 6 years. Now, finally inflation has caught up to you.
 
 **DeFi**
+
 *Putting it altogether now. Turning decentralized finance on gives you savings and borrowing rates similar to those found in decentralized finance.*
