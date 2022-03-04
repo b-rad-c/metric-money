@@ -70,7 +70,9 @@ function MetricMoneyChart() {
     generator.configFinance(state.streamIncoming, state.streamOutgoing, state.stableCurrency, state.useDeFi)
     generator.configChart(state.fitToScreen)
     generator.expenses(bills, state.unexpectedTrans)
-    return generator.run(state.startDate, state.simDuration)
+    
+    console.log(JSON.stringify(Object.fromEntries(Object.entries(state).sort()), null, 2))
+    return generator.run(state.startDate, state.simDuration, state.extraDay)
   }, [state]);
 
   //
@@ -81,7 +83,7 @@ function MetricMoneyChart() {
     if(!state.fitToScreen && state.simDuration.years > 1) { 
       return 1500 * state.simDuration.years 
     } else {
-       return "100%" 
+       return '100%' 
       } 
   }, [state])
   const chartMargin = { top: 20, right: 40, bottom: 20, left: 40 }
@@ -143,35 +145,35 @@ function MetricMoneyChart() {
       // line chart 
       //
     }
-    <div className='border shadow-lg bg-light bg-gradient' style={{margin: '1rem auto', width: "98%", overflowX: "scroll"}}>
+    <div className='border shadow-lg bg-light bg-gradient' style={{margin: '1rem auto', width: '98%', overflowX: 'scroll'}}>
 
       <h1>Metric Money</h1>
 
       <ResponsiveContainer width={chartWidth} height={400}>
         <AreaChart data={chartData.balanceData} margin={chartMargin} onClick={unexpectedHandler}>
-          <XAxis dataKey="label" ticks={chartData.months} tickFormatter={dateTickFormatter} interval="preserveEnd" tickMargin={10} minTickGap={5} angle={0} />
+          <XAxis dataKey='label' ticks={chartData.months} tickFormatter={dateTickFormatter} interval='preserveEnd' tickMargin={10} minTickGap={5} angle={0} />
           <YAxis tickFormatter={(value) => formatUSD(value)} domain={yAxis.domain} ticks={yAxis.ticks} allowDataOverflow={true}/>
           <Tooltip formatter={(value, name) => [formatUSD(value), name]} />
           { // alternating background for each month
             chartData.bkgdIntervals.map((bkgdInt, index) => (
-              <ReferenceArea key={'bkgd-' + index} x1={bkgdInt[0]} x2={bkgdInt[1]} stroke="none" strokeOpacity={0.3} />
+              <ReferenceArea key={'bkgd-' + index} x1={bkgdInt[0]} x2={bkgdInt[1]} stroke='none' strokeOpacity={0.3} />
             ))
           }
 
           { // pay check reference lines
             state.showPayCheckLines && chartData.payChecks.map((payDate, index) => (
-              <ReferenceLine key={index} x={payDate} stroke={variables.success} strokeDasharray="0" strokeWidth={2} />
+              <ReferenceLine key={index} x={payDate} stroke={variables.success} strokeDasharray='0' strokeWidth={2} />
             ))
           }
 
           <defs>
-            <linearGradient id="splitColor" x1="0" y1="0" x2="0" y2="1">
+            <linearGradient id='splitColor' x1='0' y1='0' x2='0' y2='1'>
               <stop offset={gradientOffset} stopColor={variables.success} stopOpacity={1} />
               <stop offset={gradientOffset} stopColor={variables.danger} stopOpacity={1} />
             </linearGradient>
           </defs>
           
-          <Area type="stepAfter" dataKey="balance" stroke="black" strokeWidth={3} dot={false} isAnimationActive={false} fill="url(#splitColor)"/>
+          <Area type='stepAfter' dataKey='balance' stroke='black' strokeWidth={3} dot={false} isAnimationActive={false} fill='url(#splitColor)'/>
         </AreaChart>
       </ResponsiveContainer>
 
@@ -183,7 +185,7 @@ function MetricMoneyChart() {
       //
     }
 
-    <Stack className="align-items-start justify-content-center" direction="horizontal" gap={3}>
+    <Stack className='align-items-start justify-content-center' direction='horizontal' gap={3}>
 
       <FinancialSituation 
         state={state} 

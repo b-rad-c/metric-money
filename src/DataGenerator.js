@@ -1,5 +1,5 @@
 import { add, format, eachDayOfInterval } from 'date-fns'
-import { chunk, reduce } from 'lodash'
+import { chunk, reduce, initial } from 'lodash'
 
 export class Bill {
     constructor(name, amount, dayOfMonth) {
@@ -57,7 +57,7 @@ export class Transaction {
         this.name = name
         this.amount = amount
         // date is in string form of chart label so that clicking on chart can efficiently generate a Transaction
-        // ex: "Jan 1, 2022"
+        // ex: 'Jan 1, 2022'
         this.date = date    
     }
 }
@@ -107,9 +107,9 @@ export class Generator {
         this.stableCurrency = false
         this.useDeFi = false
 
-        this.tradFiCreditRate = .17
-        this.tradFiSavingsRate = .007
-        this.deFiCreditRate = .1
+        this.tradFiBorrowRate = .17
+        this.tradFiSavingsRate = .005
+        this.deFiBorrowRate = .1
         this.deFiSavingsRate = .10
         this.inflationRate = 0.0
         
@@ -140,12 +140,12 @@ export class Generator {
         this.transactions = transactions
     }
 
-    run(startDate, duration) {
+    run(startDate, duration, extraDay) {
         // payrate is calculated daily for streaming and bi weekly otherwise
         const payRate = (this.streamIncoming) ? annualToStreaming(this.salary) * secondsPerDay : this.salary / 26
         const result = new GeneratorResult()
 
-        result.creditRate = this.useDeFi ? this.deFiCreditRate : this.tradFiCreditRate
+        result.borrowRate = this.useDeFi ? this.deFiBorrowRate : this.tradFiBorrowRate
         result.savingsRate = this.useDeFi ? this.deFiSavingsRate : this.tradFiSavingsRate
         result.inflationRate = this.stableCurrency ? 0.0 : 0.025
         const dailyInflation = 1 + (result.inflationRate / 365)
@@ -154,14 +154,17 @@ export class Generator {
         let balance = this.startBalance
         let isPayWeek = true
 
-        const daysInSimulation = eachDayOfInterval({start: startDate, end: add(startDate, duration)})
+        let daysInSimulation = eachDayOfInterval({start: startDate, end: add(startDate, duration)})
+        // a fiscal year by default would not include the start of the next year, so `initial` is used to remove it by default
+        // but to show the unpredictabililty of finances based on the gregorian calendar allow people to choose to show the next day
+        if (!extraDay) daysInSimulation = initial(daysInSimulation)
         daysInSimulation.forEach((date) => {
             let label = format(date, 'MMM d, yyyy')
             let dayOfMonth = date.getDate()
             let month = date.getMonth()
 
             if (balance < 0) {
-                let charge = Math.abs(balance) * result.creditRate / 365
+                let charge = Math.abs(balance) * result.borrowRate / 365
                 result.interestPaid += charge
                 balance -= charge
             }else{
@@ -173,22 +176,27 @@ export class Generator {
             // salary
             if(this.streamIncoming) {
                 balance += payRate
+                result.totalIncome += payRate
             }else if(date.getDay() === 5) {
                 if(isPayWeek) {
                     balance += payRate
+                    result.totalIncome += payRate
                     result.payChecks.push(label)
                 }
                 isPayWeek = !isPayWeek
             }
             
             // subtract today's bills
+            let bills = 0
             if(this.streamOutgoing) {
-                balance -= this.bills.dailyTotalStreaming()
+                bills += this.bills.dailyTotalStreaming()
             }else{
-                balance -= this.bills.dailyTotalNonStreaming(dayOfMonth)
+                bills += this.bills.dailyTotalNonStreaming(dayOfMonth)
             }
             
-            balance -= this.transactions.dailyTotal(label)
+            bills += this.transactions.dailyTotal(label)
+            balance -= bills
+            result.totalBillPay += bills
             
             // determine which ticks to place on x axis,
             // choose dynamically based on length of simulation to prevent crowding
@@ -227,7 +235,7 @@ class GeneratorResult {
         this.payChecks = []
         this.months = []
         this.finalBalance = 0.0
-        this.creditRate = 0.0
+        this.borrowRate = 0.0
         this.interestPaid = 0.0
         this.inflationRate = 0.0
         this.savingsRate = 0.0
@@ -237,6 +245,8 @@ class GeneratorResult {
         this.costOfLivingEnd = 0.0
         this.costOfLivingDiff = 0.0
         this.costOfLivingChange = 0.0
+        this.totalIncome = 0.0
+        this.totalBillPay = 0.0
     }
 
     finalize(finalBalance, costOfLivingEnd) {
