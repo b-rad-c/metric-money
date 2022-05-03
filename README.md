@@ -2,7 +2,8 @@
 
 A charting app designed to the show the benefits of streaming money and decentralized finance. It is built with `react`, `bootstrap`, `recharts`, `date-fns` and `lodash`.
 
-    npm start
+Read the [essay here](https://pacdao.substack.com/p/how-crypto-occupies-wall-st-part?r=3mnfz&s=w&utm_campaign=post&utm_medium=web) to understand the point of this repository.
+
 
 ![Metric money chart](/examples/metric-money.png)
 
