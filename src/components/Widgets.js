@@ -252,8 +252,8 @@ return (
             <Form.Switch label='Extra day' onChange={extraDayHandler} checked={props.state.extraDay}/>
             <Form.Switch label='Inflation' onChange={useInflationHandler} checked={props.state.useInflation}/>
             <Stack className='justify-content-center' direction='horizontal' gap={2}>
-                <Button size='sm' onClick={() => { rateHandler('inflationRate', -0.010) }} disabled={props.state.inflationRate == 0}>--</Button>
-                <Button size='sm' onClick={() => { rateHandler('inflationRate', -0.001) }} disabled={props.state.inflationRate == 0}>-</Button>
+                <Button size='sm' onClick={() => { rateHandler('inflationRate', -0.010) }} disabled={props.state.inflationRate === 0}>--</Button>
+                <Button size='sm' onClick={() => { rateHandler('inflationRate', -0.001) }} disabled={props.state.inflationRate === 0}>-</Button>
                     <span>{formatRate(props.state.inflationRate)}</span>
                 <Button size='sm' onClick={() => { rateHandler('inflationRate', 0.001) }} disabled={props.state.inflationRate >= 0.15}>+</Button>
                 <Button size='sm' onClick={() => { rateHandler('inflationRate', 0.010) }} disabled={props.state.inflationRate >= 0.15}>++</Button>

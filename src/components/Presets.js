@@ -15,8 +15,8 @@ const ImperialMoney = {
     simDuration: {
         years: 1
     },
-    useInflation: false,
-    inflationRate: 0.035,
+    useInflation: true,
+    inflationRate: 0.020,
     startBalance: 1000,
     startDate: new Date('Jan 01, 2022'),
     streamIncoming: false,
@@ -41,8 +41,8 @@ const MetricMoney = {
     simDuration: {
         years: 1
     },
-    useInflation: false,
-    inflationRate: 0.035,
+    useInflation: true,
+    inflationRate: 0.020,
     startBalance: 1000,
     startDate: new Date('Jan 01, 2022'),
     streamIncoming: true,
