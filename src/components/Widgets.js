@@ -219,7 +219,10 @@ return (
 }
 
 export function Options (props) {
-const numIncHandler = (name, num) => { props.updateState(name, props.state[name] + num) }
+const rateHandler = (name, num) => { 
+    const newValue = props.state[name] + num
+    props.updateState(name, clamp(newValue, 0, 0.15)) 
+}
 const showPayCheckLinesHandler = (e) => { props.updateState('showPayCheckLines', e.target.checked) }
 const fitToScreenHandler = (e) => { props.updateState('fitToScreen', e.target.checked) }
 const streamIncomingHandler = (e) => { props.updateState('streamIncoming', e.target.checked) }
@@ -247,11 +250,13 @@ return (
             <Form.Switch label='Stream income' onChange={streamIncomingHandler} checked={props.state.streamIncoming}/>
             <Form.Switch label='Stream bill payment' onChange={streamOutgoingHandler} checked={props.state.streamOutgoing}/>
             <Form.Switch label='Extra day' onChange={extraDayHandler} checked={props.state.extraDay}/>
-            <Stack direction='horizontal' gap={2}>
-                <Form.Switch label='Inflation' onChange={useInflationHandler} checked={props.state.useInflation}/>
-                <Button size='sm' onClick={() => { numIncHandler('inflationRate', -0.001) }}>-</Button>
+            <Form.Switch label='Inflation' onChange={useInflationHandler} checked={props.state.useInflation}/>
+            <Stack className='justify-content-center' direction='horizontal' gap={2}>
+                <Button size='sm' onClick={() => { rateHandler('inflationRate', -0.010) }} disabled={props.state.inflationRate == 0}>--</Button>
+                <Button size='sm' onClick={() => { rateHandler('inflationRate', -0.001) }} disabled={props.state.inflationRate == 0}>-</Button>
                     <span>{formatRate(props.state.inflationRate)}</span>
-                <Button size='sm' onClick={() => { numIncHandler('inflationRate', 0.001) }}>+</Button>
+                <Button size='sm' onClick={() => { rateHandler('inflationRate', 0.001) }} disabled={props.state.inflationRate >= 0.15}>+</Button>
+                <Button size='sm' onClick={() => { rateHandler('inflationRate', 0.010) }} disabled={props.state.inflationRate >= 0.15}>++</Button>
             </Stack>
             
         </Form>
