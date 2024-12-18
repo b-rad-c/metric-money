@@ -219,13 +219,13 @@ return (
 }
 
 export function Options (props) {
+const numIncHandler = (name, num) => { props.updateState(name, props.state[name] + num) }
 const showPayCheckLinesHandler = (e) => { props.updateState('showPayCheckLines', e.target.checked) }
 const fitToScreenHandler = (e) => { props.updateState('fitToScreen', e.target.checked) }
 const streamIncomingHandler = (e) => { props.updateState('streamIncoming', e.target.checked) }
-const useDeFiHandler = (e) => { props.updateState('useDeFi', e.target.checked); }
 const streamOutgoingHandler = (e) => { props.updateState('streamOutgoing', e.target.checked) }
 const extraDayHandler = (e) => props.updateState('extraDay', e.target.checked)
-const stableCurrencyHandler = (e) => { props.updateState('stableCurrency', e.target.checked) }
+const useInflationHandler = (e) => { props.updateState('useInflation', e.target.checked) }
 return (
 <Card className='bg-light bg-gradient shadow-lg' style={{ width: '17rem' }}>
     <Card.Title>Options</Card.Title>
@@ -247,16 +247,16 @@ return (
             <Form.Switch label='Stream income' onChange={streamIncomingHandler} checked={props.state.streamIncoming}/>
             <Form.Switch label='Stream bill payment' onChange={streamOutgoingHandler} checked={props.state.streamOutgoing}/>
             <Form.Switch label='Extra day' onChange={extraDayHandler} checked={props.state.extraDay}/>
-            <Form.Switch label='Stable currency' onChange={stableCurrencyHandler} checked={props.state.stableCurrency}/>
-            <Form.Switch label='DeFi' onChange={useDeFiHandler} checked={props.state.useDeFi}/>
+            <Stack direction='horizontal' gap={2}>
+                <Form.Switch label='Inflation' onChange={useInflationHandler} checked={props.state.useInflation}/>
+                <Button size='sm' onClick={() => { numIncHandler('inflationRate', -0.001) }}>-</Button>
+                    <span>{formatRate(props.state.inflationRate)}</span>
+                <Button size='sm' onClick={() => { numIncHandler('inflationRate', 0.001) }}>+</Button>
+            </Stack>
+            
         </Form>
         
     </Card.Body>
-    <Container className='text-start' style={{marginBottom: '1rem'}}>
-        <Row><Col><strong>savings rate:</strong>  </Col><Col>{formatRate(props.chartData.savingsRate)}  </Col></Row>
-        <Row><Col><strong>borrow rate:</strong>   </Col><Col>{formatRate(props.chartData.borrowRate)}   </Col></Row>
-        <Row><Col><strong>inflation rate:</strong></Col><Col>{formatRate(props.chartData.inflationRate)}</Col></Row>
-    </Container>
 </Card>
 )
 }
@@ -289,6 +289,15 @@ return (
             <Row>
                 <Col><strong>total bill pay:</strong></Col><Col>{ formatUSD(props.chartData.totalBillPay) }</Col>
             </Row>
+        </Container>
+    </Card.Body>
+
+    <Card.Title>Rates</Card.Title>
+    <Card.Body>
+        <Container className='text-start' style={{marginBottom: '1rem'}}>
+            <Row><Col><strong>savings rate:</strong>  </Col><Col>{formatRate(props.chartData.savingsRate)}  </Col></Row>
+            <Row><Col><strong>borrow rate:</strong>   </Col><Col>{formatRate(props.chartData.borrowRate)}   </Col></Row>
+            <Row><Col><strong>inflation rate:</strong></Col><Col>{formatRate(props.chartData.inflationRate)}</Col></Row>
         </Container>
     </Card.Body>
 
