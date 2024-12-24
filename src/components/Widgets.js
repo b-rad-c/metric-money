@@ -318,15 +318,6 @@ return (
         </Container>
     </Card.Body>
 
-    <Card.Title>Rates</Card.Title>
-    <Card.Body>
-        <Container className='text-start' style={{marginBottom: '1rem'}}>
-            <Row><Col><strong>savings rate:</strong>  </Col><Col>{formatRate(props.chartData.savingsRate)}  </Col></Row>
-            <Row><Col><strong>borrow rate:</strong>   </Col><Col>{formatRate(props.chartData.borrowRate)}   </Col></Row>
-            <Row><Col><strong>inflation rate:</strong></Col><Col>{formatRate(props.chartData.inflationRate)}</Col></Row>
-        </Container>
-    </Card.Body>
-
     <Card.Title>Cost of Living</Card.Title>
     <Card.Body>
         <Container className='text-start'>
