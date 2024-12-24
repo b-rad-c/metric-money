@@ -106,8 +106,8 @@ export class Generator {
         this.streamOutgoing = false
         this.useInflation = false
 
-        this.tradFiBorrowRate = .17
-        this.tradFiSavingsRate = .005
+        this.borrowRate = .17
+        this.savingsRate = .005
         this.inflationRate = 0.025
         
         this.fitToScreen = false
@@ -121,11 +121,13 @@ export class Generator {
         this.salary = salary
     }
 
-    configFinance(streamIncoming, streamOutgoing, useInflation, inflationRate) {
+    configFinance(streamIncoming, streamOutgoing, useInflation, inflationRate, borrowRate, savingsRate) {
         this.streamIncoming = streamIncoming
         this.streamOutgoing = streamOutgoing
         this.useInflation = useInflation
         this.inflationRate = inflationRate
+        this.borrowRate = borrowRate
+        this.savingsRate = savingsRate
     }
 
     configChart(fitToScreen) {
@@ -142,8 +144,8 @@ export class Generator {
         const payRate = (this.streamIncoming) ? annualToStreaming(this.salary) * secondsPerDay : this.salary / 26
         const result = new GeneratorResult()
 
-        result.borrowRate = this.tradFiBorrowRate
-        result.savingsRate = this.tradFiSavingsRate
+        result.borrowRate = this.borrowRate
+        result.savingsRate = this.savingsRate
         result.inflationRate = this.useInflation ? this.inflationRate : 0.0
         const dailyInflation = 1 + (result.inflationRate / 365)
         result.costOfLivingStart = this.bills.yearlyCostOfLiving()

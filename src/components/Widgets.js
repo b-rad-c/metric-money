@@ -2,6 +2,8 @@ import { add, format, formatDuration } from 'date-fns'
 import { clamp } from 'lodash'
 import { Stack, Button, ButtonGroup, Card, Form, Container, Row, Col, Table, FloatingLabel } from 'react-bootstrap';
 import PresetList from './Presets.js';
+import { TransactionList } from '../DataGenerator.js';
+import React from 'react';
 
 
 //
@@ -229,6 +231,7 @@ const streamIncomingHandler = (e) => { props.updateState('streamIncoming', e.tar
 const streamOutgoingHandler = (e) => { props.updateState('streamOutgoing', e.target.checked) }
 const extraDayHandler = (e) => props.updateState('extraDay', e.target.checked)
 const useInflationHandler = (e) => { props.updateState('useInflation', e.target.checked) }
+const gap = 2
 return (
 <Card className='bg-light bg-gradient shadow-lg' style={{ width: '17rem' }}>
     <Card.Title>Options</Card.Title>
@@ -251,12 +254,28 @@ return (
             <Form.Switch label='Stream bill payment' onChange={streamOutgoingHandler} checked={props.state.streamOutgoing}/>
             <Form.Switch label='Extra day' onChange={extraDayHandler} checked={props.state.extraDay}/>
             <Form.Switch label='Inflation' onChange={useInflationHandler} checked={props.state.useInflation}/>
-            <Stack className='justify-content-center' direction='horizontal' gap={2}>
+            <Stack className='justify-content-center' direction='horizontal' gap={gap}>
                 <Button size='sm' onClick={() => { rateHandler('inflationRate', -0.010) }} disabled={props.state.inflationRate === 0}>--</Button>
                 <Button size='sm' onClick={() => { rateHandler('inflationRate', -0.001) }} disabled={props.state.inflationRate === 0}>-</Button>
                     <span>{formatRate(props.state.inflationRate)}</span>
                 <Button size='sm' onClick={() => { rateHandler('inflationRate', 0.001) }} disabled={props.state.inflationRate >= 0.15}>+</Button>
                 <Button size='sm' onClick={() => { rateHandler('inflationRate', 0.010) }} disabled={props.state.inflationRate >= 0.15}>++</Button>
+            </Stack>
+            <Form.Label>Borrow rate</Form.Label>
+            <Stack className='justify-content-center' direction='horizontal' gap={gap}>
+                <Button size='sm' onClick={() => { rateHandler('borrowRate', -0.010) }} disabled={props.state.borrowRate === 0}>--</Button>
+                <Button size='sm' onClick={() => { rateHandler('borrowRate', -0.001) }} disabled={props.state.borrowRate === 0}>-</Button>
+                    <span>{formatRate(props.state.borrowRate)}</span>
+                <Button size='sm' onClick={() => { rateHandler('borrowRate', 0.001) }} disabled={props.state.borrowRate >= 0.30}>+</Button>
+                <Button size='sm' onClick={() => { rateHandler('borrowRate', 0.010) }} disabled={props.state.borrowRate >= 0.30}>++</Button>
+            </Stack>
+            <Form.Label>Savings rate</Form.Label>
+            <Stack className='justify-content-center' direction='horizontal' gap={gap}>
+                <Button size='sm' onClick={() => { rateHandler('savingsRate', -0.010) }} disabled={props.state.savingsRate === 0}>--</Button>
+                <Button size='sm' onClick={() => { rateHandler('savingsRate', -0.001) }} disabled={props.state.savingsRate === 0}>-</Button>
+                    <span>{formatRate(props.state.savingsRate)}</span>
+                <Button size='sm' onClick={() => { rateHandler('savingsRate', 0.001) }} disabled={props.state.savingsRate >= 0.15}>+</Button>
+                <Button size='sm' onClick={() => { rateHandler('savingsRate', 0.010) }} disabled={props.state.savingsRate >= 0.15}>++</Button>
             </Stack>
             
         </Form>
@@ -270,6 +289,9 @@ export function Result (props) {
 const items = props.state.unexpectedTrans.items
 const haveTransactions = items.length > 0
 const COLChange = props.chartData.costOfLivingDiff === 0.0 ? '-' : formatRate(props.chartData.costOfLivingChange)
+const removeUnexpectedTrans = (index) => {
+    props.updateState('unexpectedTrans', new TransactionList(items.filter((_, i) => i !== index)))
+}
 return (
 <Card className='bg-light bg-gradient shadow-lg' style={{ width: '23rem' }}>
     <Card.Title>Results</Card.Title>
@@ -287,7 +309,6 @@ return (
             <Row>
                 <Col><strong>interest paid:</strong></Col><Col>{ formatUSD(props.chartData.interestPaid) }</Col>
             </Row>
-
             <Row>
                 <Col><strong>actual income:</strong></Col><Col>{ formatUSD(props.chartData.totalIncome) }</Col>
             </Row>
@@ -334,7 +355,7 @@ return (
             <Container>
             {
                 items.map((trans, index) => (
-                    <Row key={index}>
+                    <Row key={index} style={{cursor: 'pointer'}} onClick={() => removeUnexpectedTrans(index)}>
                         <Col>{trans.date}</Col>
                         <Col>{formatUSD(trans.amount)}</Col>
                     </Row>
