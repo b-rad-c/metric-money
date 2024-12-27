@@ -2,7 +2,6 @@ import { add, format, formatDuration } from 'date-fns'
 import { clamp } from 'lodash'
 import { Stack, Button, ButtonGroup, Card, Form, Container, Row, Col, Table, FloatingLabel } from 'react-bootstrap';
 import PresetList from './Presets.js';
-import { TransactionList } from '../DataGenerator.js';
 import React from 'react';
 
 
@@ -286,11 +285,11 @@ return (
 }
 
 export function Result (props) {
-const items = props.state.unexpectedTrans.items
-const haveTransactions = items.length > 0
+const transactions = props.state.unexpectedTrans
+const haveTransactions = transactions.length > 0
 const COLChange = props.chartData.costOfLivingDiff === 0.0 ? '-' : formatRate(props.chartData.costOfLivingChange)
 const removeUnexpectedTrans = (index) => {
-    props.updateState('unexpectedTrans', new TransactionList(items.filter((_, i) => i !== index)))
+    props.updateState('unexpectedTrans', transactions.filter((_, i) => i !== index))
 }
 return (
 <Card className='bg-light bg-gradient shadow-lg' style={{ width: '23rem' }}>
@@ -345,7 +344,7 @@ return (
             haveTransactions &&
             <Container>
             {
-                items.map((trans, index) => (
+                transactions.map((trans, index) => (
                     <Row key={index} style={{cursor: 'pointer'}} onClick={() => removeUnexpectedTrans(index)}>
                         <Col>{trans.date}</Col>
                         <Col>{formatUSD(trans.amount)}</Col>

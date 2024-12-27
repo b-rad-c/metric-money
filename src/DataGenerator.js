@@ -26,14 +26,20 @@ export class BillList {
     constructor(bills) {
         this.bills = bills
         this.lookup = {}
+        this.setup()
+
+    }
+
+    setup() {
+        this.lookup = {}
         for (let i = 0; i <= 27; i++) {
             this.lookup[i] = []
         }
         this.bills.forEach((bill) => {
             this.lookup[bill.dayOfMonth].push(bill)
         })
-
     }
+
 
     yearlyCostOfLiving() {
         return reduce(this.bills, (acc, bill) => { return acc + bill.amount }, 0) * 12
@@ -64,9 +70,14 @@ export class Transaction {
 
 export class TransactionList {
     constructor(transactions) {
-        this.items = transactions
+        this.transactions = transactions
         this.lookup = {}
-        transactions.forEach((t) => {
+        this.setup()
+    }
+
+    setup() {
+        this.lookup = {}
+        this.transactions.forEach((t) => {
             if (typeof this.lookup[t.date] === 'undefined') {
                 this.lookup[t.date] = [t]
             } else {
@@ -98,45 +109,25 @@ function monthlyToStreaming(num) {
 }
 
 export class Generator {
-    constructor() {
+    constructor(config) {
+
+        // set defaults
+
         this.startBalance = 0
         this.salary = 0
 
         this.streamIncoming = false
         this.streamOutgoing = false
-        this.useInflation = false
 
+        this.useInflation = false
         this.borrowRate = .17
         this.savingsRate = .005
         this.inflationRate = 0.025
         
         this.fitToScreen = false
 
-        this.bills = []
-        this.transactions = []
-    }
-
-    configSalary(startBalance, salary) {
-        this.startBalance = startBalance
-        this.salary = salary
-    }
-
-    configFinance(streamIncoming, streamOutgoing, useInflation, inflationRate, borrowRate, savingsRate) {
-        this.streamIncoming = streamIncoming
-        this.streamOutgoing = streamOutgoing
-        this.useInflation = useInflation
-        this.inflationRate = inflationRate
-        this.borrowRate = borrowRate
-        this.savingsRate = savingsRate
-    }
-
-    configChart(fitToScreen) {
-        this.fitToScreen = fitToScreen
-    }
-
-    expenses(bills, transactions) {
-        this.bills = bills 
-        this.transactions = transactions
+        this.bills = new BillList([])
+        this.transactions = new TransactionList([])
     }
 
     run(startDate, duration, extraDay) {

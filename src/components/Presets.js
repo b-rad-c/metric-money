@@ -1,4 +1,4 @@
-import { Transaction, TransactionList } from '../DataGenerator'
+import { Transaction } from '../DataGenerator'
 
 const ImperialMoney = {
     carCost: 250,
@@ -23,7 +23,7 @@ const ImperialMoney = {
     startDate: new Date('Jan 01, 2022'),
     streamIncoming: false,
     streamOutgoing: false,
-    unexpectedTrans: new TransactionList([]),
+    unexpectedTrans:[],
     waterCost: 100,
     waterDue: 25
 }
@@ -51,7 +51,7 @@ const MetricMoney = {
     startDate: new Date('Jan 01, 2022'),
     streamIncoming: true,
     streamOutgoing: true,
-    unexpectedTrans: new TransactionList([]),
+    unexpectedTrans: [],
     waterCost: 100,
     waterDue: 25
 }
@@ -79,10 +79,10 @@ const MetricMoney2 = {
     startDate: new Date('Jan 01, 2022'),
     streamIncoming: true,
     streamOutgoing: true,
-    unexpectedTrans: new TransactionList([
+    unexpectedTrans: [
         new Transaction('UNEXPECTED EXPENSE', 500, 'May 10, 2022'),
         new Transaction('UNEXPECTED EXPENSE', 500, 'Sep 1, 2022')
-    ]),
+    ],
     waterCost: 100,
     waterDue: 25
 }

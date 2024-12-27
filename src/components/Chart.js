@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Stack } from 'react-bootstrap';
 import PresetList from './Presets';
-import { Bill, BillList, Generator, Transaction, TransactionList } from '../DataGenerator';
+import { Bill, Generator, Transaction } from '../DataGenerator';
 import { 
   FinancialSituation,
   Bills, 
@@ -21,6 +21,7 @@ import {
   ResponsiveContainer
 } from 'recharts';
 
+// @ts-ignore
 import variables from '../index.scss';
 
 
@@ -50,7 +51,7 @@ function MetricMoneyChart() {
 
   function unexpectedHandler(e) {
     const newTrans = new Transaction('UNEXPECTED EXPENSE', 500, e.activeLabel)
-    const newList = new TransactionList(state.unexpectedTrans.items.concat([newTrans]))
+    const newList = state.unexpectedTrans.concat([newTrans])
     updateState('unexpectedTrans', newList)
   }
 
@@ -59,17 +60,31 @@ function MetricMoneyChart() {
   //
 
   const chartData = useMemo(() => {
-    const bills = new BillList([
+   
+    const generator = new Generator()
+    generator.startBalance = state.startBalance
+    generator.salary = state.salary
+
+    generator.streamIncoming = state.streamIncoming
+    generator.streamOutgoing = state.streamOutgoing
+
+    generator.useInflation = state.useInflation
+    generator.borrowRate = state.borrowRate
+    generator.savingsRate = state.savingsRate
+    generator.inflationRate = state.inflationRate
+
+    generator.fitToScreen = state.fitToScreen
+
+    generator.bills.bills = [
       new Bill('HOUSING', state.housingCost, state.housingDue),
       new Bill('CAR', state.carCost, state.carDue),
       new Bill('ELECTRIC', state.electricCost, state.electricDue),
       new Bill('WATER', state.waterCost, state.waterDue)
-    ])
-    const generator = new Generator()
-    generator.configSalary(state.startBalance, state.salary)
-    generator.configFinance(state.streamIncoming, state.streamOutgoing, state.useInflation, state.inflationRate, state.borrowRate, state.savingsRate)
-    generator.configChart(state.fitToScreen)
-    generator.expenses(bills, state.unexpectedTrans)
+    ]
+    generator.bills.setup()
+    generator.transactions.transactions = state.unexpectedTrans
+    generator.transactions.setup()
+    
     
     // console.log(JSON.stringify(Object.fromEntries(Object.entries(state).sort()), null, 2))
     return generator.run(state.startDate, state.simDuration, state.extraDay)
