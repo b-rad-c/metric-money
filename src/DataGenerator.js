@@ -109,9 +109,7 @@ function monthlyToStreaming(num) {
 }
 
 export class Generator {
-    constructor(config) {
-
-        // set defaults
+    constructor() {
 
         this.startBalance = 0
         this.salary = 0
