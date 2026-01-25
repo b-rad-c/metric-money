@@ -1,5 +1,5 @@
 import React from 'react'
-import { render } from 'react-dom'
+import { createRoot } from 'react-dom/client'
 import './index.scss'
 import MetricMoneyChart from './components/Chart.js'
 
@@ -13,7 +13,5 @@ function MetricMoney() {
 }
 
 
-render(
-  <MetricMoney />,
-  document.getElementById('root')
-)
+const root = createRoot(document.getElementById('root'))
+root.render(<MetricMoney />)
