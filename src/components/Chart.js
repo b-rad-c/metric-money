@@ -77,9 +77,10 @@ function MetricMoneyChart() {
 
     generator.bills.bills = [
       new Bill('HOUSING', state.housingCost, state.housingDue),
-      new Bill('CAR', state.carCost, state.carDue),
-      new Bill('ELECTRIC', state.electricCost, state.electricDue),
-      new Bill('WATER', state.waterCost, state.waterDue)
+      new Bill('TRANSPORTATION', state.transportationCost, state.transportationDue),
+      new Bill('MEDICAL', state.medicalCost, state.medicalDue),
+      new Bill('CHILD CARE', state.childCareCost, state.childCareDue),
+      new Bill('INTERNET AND MOBILE', state.internetMobileCost, state.internetMobileDue)
     ]
     generator.bills.setup()
     generator.transactions.transactions = state.unexpectedTrans

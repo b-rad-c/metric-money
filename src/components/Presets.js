@@ -1,16 +1,20 @@
 import { Transaction } from '../DataGenerator'
 
 const ImperialMoney = {
-    carCost: 250,
-    carDue: 5,
-    electricCost: 150,
-    electricDue: 15,
+    transportationCost: 929.67,
+    transportationDue: 5,
+    medicalCost: 515.75,
+    medicalDue: 10,
+    childCareCost: 1571.25,
+    childCareDue: 15,
+    internetMobileCost: 179.92,
+    internetMobileDue: 20,
     extraDay: false,
     fitToScreen: true,
-    housingCost: 1000,
+    housingCost: 2005.33,
     housingDue: 1,
     name: 'Imperial money',
-    salary: 19000,
+    salary: 84844,
     showPayCheckLines: true,
     simDuration: {
         years: 1
@@ -23,22 +27,24 @@ const ImperialMoney = {
     startDate: new Date('Jan 01, 2022'),
     streamIncoming: false,
     streamOutgoing: false,
-    unexpectedTrans:[],
-    waterCost: 100,
-    waterDue: 25
+    unexpectedTrans:[]
 }
 
 const MetricMoney = {
-    carCost: 250,
-    carDue: 5,
-    electricCost: 150,
-    electricDue: 15,
+    transportationCost: 929.67,
+    transportationDue: 5,
+    medicalCost: 515.75,
+    medicalDue: 10,
+    childCareCost: 1571.25,
+    childCareDue: 15,
+    internetMobileCost: 179.92,
+    internetMobileDue: 20,
     extraDay: false,
     fitToScreen: true,
-    housingCost: 1000,
+    housingCost: 2005.33,
     housingDue: 1,
     name: 'Metric money',
-    salary: 19000,
+    salary: 84844,
     showPayCheckLines: true,
     simDuration: {
         years: 1
@@ -51,22 +57,24 @@ const MetricMoney = {
     startDate: new Date('Jan 01, 2022'),
     streamIncoming: true,
     streamOutgoing: true,
-    unexpectedTrans: [],
-    waterCost: 100,
-    waterDue: 25
+    unexpectedTrans: []
 }
 
 const MetricMoney2 = {
-    carCost: 250,
-    carDue: 5,
-    electricCost: 150,
-    electricDue: 15,
+    transportationCost: 929.67,
+    transportationDue: 5,
+    medicalCost: 515.75,
+    medicalDue: 10,
+    childCareCost: 1571.25,
+    childCareDue: 15,
+    internetMobileCost: 179.92,
+    internetMobileDue: 20,
     extraDay: false,
     fitToScreen: true,
-    housingCost: 1000,
+    housingCost: 2005.33,
     housingDue: 1,
     name: 'Metric money - expenses',
-    salary: 19000,
+    salary: 84844,
     showPayCheckLines: true,
     simDuration: {
         years: 1
@@ -82,9 +90,7 @@ const MetricMoney2 = {
     unexpectedTrans: [
         new Transaction('UNEXPECTED EXPENSE', 500, 'May 10, 2022'),
         new Transaction('UNEXPECTED EXPENSE', 500, 'Sep 1, 2022')
-    ],
-    waterCost: 100,
-    waterDue: 25
+    ]
 }
 
 const PresetList = [ImperialMoney, MetricMoney, MetricMoney2]
