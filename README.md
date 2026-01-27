@@ -39,7 +39,3 @@ Read the [essay here](https://pacdao.substack.com/p/how-crypto-occupies-wall-st-
 + Turn the stable currency option on and off and notice the difference in final balance and cost of living.
     - The difference isn't too dramatic when looking at one year
     - Turn off stable currency and extend the simulation to 6 years. Now, finally inflation has caught up to you.
-
-**DeFi**
-
-*Putting it altogether now. Turning decentralized finance on gives you savings and borrowing rates similar to those found in decentralized finance.*

@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>
+      Living Wage Calculator
+       - Living Wage Calculation for Portland-Vancouver-Hillsboro, OR
+    </title>
+    <link href='https://fonts.googleapis.com/css?family=Merriweather:400,700,900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/assets/application-86dd0534e5cd6b2889ee2483cc8de4540a109e9945a55d7ab8d3a12209d891dd.css" media="all" />
+    <script src="/assets/application-ee4ce8963733b9d29b34a0fa48d7e501713d7b35e13ac4ff72cf90a40bbcc138.js"></script>
+    <meta name="csrf-param" content="authenticity_token" />
+<meta name="csrf-token" content="vz_ktOn5FZ8TPxu2oMmk4KXn9JD0MreHX-n1Bu33cbOeG85oQP1nuGpLTydbHAWzq-zXTbeVMyBfbzSgd7V0YQ" />
+    
+    <link rel="icon" type="image/x-icon" href="/assets/favicon/favicon-fa07823f76f96ba141a7ef916b2d3b0a024d6877499bade0c6371f9141dd4491.ico" />
+    <meta name="built-on"    content="2025-09-16">
+    <meta name="git-sha"     content="18fc886">
+    <meta name="data-sha"    content="92ee2a1">
+    <meta name="sentry-trace" content="dad55173f4c44da2ac04f01fa0c5f573-3b14dda3125046e9-1">
+<meta name="baggage" content="sentry-trace_id=dad55173f4c44da2ac04f01fa0c5f573,sentry-sample_rate=1.0,sentry-sampled=true,sentry-environment=prod,sentry-public_key=86fd4175bcbfe3821fb001c42fd44727">
+  </head>
+  <body class="displaying_results">
+  <div class="header">
+    <div class="navbar navbar-static-top" role="navigation">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle nav_hamburger" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a href=/>
+          <h1 class="logo_wrap logo pull-left">
+            <span class="logo_lw">Living Wage</span>
+            <span class="logo_calc">calculator</span>
+          </h1>
+        </a>
+      </div>
+      <div class="collapse navbar-collapse navbar-ex1-collapse" style="box-shadow: none!important!;">
+        <div class="col-sm-2 col-md-2 pull-right nav_link_wrap">
+          <ul class="nav-links nav navbar-nav">
+            <li><a href="/pages/methodology">Methodology</a></li>
+            <li><a href="/pages/faqs">FAQs</a></li>
+            <li><a href="/pages/contact">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+      <div class="container">
+  <h1>Living Wage Calculation for Portland-Vancouver-Hillsboro, OR</h1>
+
+  <p class="results_info">
+  The living wage shown is the hourly rate that an <strong>individual</strong> in a household must earn to support themselves and/or their family, working full-time, or 2080 hours per year. The tables below provide living wage estimates for individuals and households 
+  with one or two working adults and zero to three children. In households with 
+  two working adults, all hourly values reflect what one working adult requires to earn to meet their families’ basic needs, assuming the other adult also earns the same. <br><br>
+  
+  The poverty wage and state minimum wage are for reference purposes. Poverty wage estimates come from the Department of Health and Human Services’ <a href="https://aspe.hhs.gov/topics/poverty-economic-mobility/poverty-guidelines" target="_blank">Poverty Guidelines</a> for 2025 and have been converted from an annual value to an hourly wage for ease of comparison. The state minimum wage data is sourced from the <a href="https://www.laborlawcenter.com/state-minimum-wage-rates" target="_blank">Labor Law Center</a> and includes the minimum wage in a given state as of January of that year. 
+  </p>
+  <p>
+    For further detail, please reference the <a href="/pages/methodology">Methodology</a> page. The data on this page was last updated on February 10, 2025.
+  </p>
+
+
+<div class="table-responsive table_wrap">
+  <table class="results_table table-striped">
+    <thead>
+      <tr>
+        <th colspan="1"> </th>
+        <th colspan="4">1 ADULT</th>
+        <th colspan="4">2 ADULTS<p>(1 WORKING)</p></th> 
+        <th colspan="4">2 ADULTS<p>(BOTH WORKING)</p></th>
+      </tr>
+    </thead>
+    <thead>
+      <tr>
+        <td class="blank_cell"> </td>
+        <td><b>0&nbsp;Children</b></td>
+        <td><b>1&nbsp;Child</b></td> 
+        <td><b>2&nbsp;Children</b></td>
+        <td><b>3&nbsp;Children</b></td>
+
+        <td><b>0&nbsp;Children</b></td>
+        <td><b>1&nbsp;Child</b></td> 
+        <td><b>2&nbsp;Children</b></td>
+        <td><b>3&nbsp;Children</b></td>
+
+        <td><b>0&nbsp;Children</b></td>
+        <td><b>1&nbsp;Child</b></td> 
+        <td><b>2&nbsp;Children</b></td>
+        <td><b>3&nbsp;Children</b></td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="odd living_wage results">
+        <td class="text wage_title"><b>Living Wage</b></td>
+          <td>
+            $27.47
+          </td>
+          <td>
+            $49.02
+          </td>
+          <td>
+            $62.82
+          </td>
+          <td>
+            $77.79
+          </td>
+          <td>
+            $37.04
+          </td>
+          <td>
+            $42.91
+          </td>
+          <td>
+            $47.27
+          </td>
+          <td>
+            $56.19
+          </td>
+          <td>
+            $18.52
+          </td>
+          <td>
+            $27.07
+          </td>
+          <td>
+            $34.01
+          </td>
+          <td>
+            $40.64
+          </td>
+      </tr>
+
+      <tr class="even">
+        <td class="text wage_title"><b>Poverty Wage</b></td>
+          <td class="red">
+            $7.52
+          </td>
+          <td class="red">
+            $10.17
+          </td>
+          <td class="red">
+            $12.81
+          </td>
+          <td class="red">
+            $15.46
+          </td>
+          <td class="red">
+            $10.17
+          </td>
+          <td class="red">
+            $12.81
+          </td>
+          <td class="red">
+            $15.46
+          </td>
+          <td class="red">
+            $18.10
+          </td>
+          <td class="red">
+            $5.08
+          </td>
+          <td class="red">
+            $6.41
+          </td>
+          <td class="red">
+            $7.73
+          </td>
+          <td class="red">
+            $9.05
+          </td>
+      </tr>
+
+      <tr class="odd">
+        <td class="text wage_title"><b>Minimum Wage</b></td>
+          <td class="red">
+            $14.70
+          </td>
+          <td class="red">
+            $14.70
+          </td>
+          <td class="red">
+            $14.70
+          </td>
+          <td class="red">
+            $14.70
+          </td>
+          <td class="red">
+            $14.70
+          </td>
+          <td class="red">
+            $14.70
+          </td>
+          <td class="red">
+            $14.70
+          </td>
+          <td class="red">
+            $14.70
+          </td>
+          <td class="red">
+            $14.70
+          </td>
+          <td class="red">
+            $14.70
+          </td>
+          <td class="red">
+            $14.70
+          </td>
+          <td class="red">
+            $14.70
+          </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+
+<h2 class="page_title">Typical Expenses</h2>
+<p>
+  The table below shows the costs of each basic need that go into estimating the living
+  wage. Like with the living wage, their values vary by location and family size.
+</p>
+<div class="table-responsive table_wrap">
+  <table class="results_table table-striped expense_table">
+    <thead>
+      <tr>
+        <th colspan="1"> </th>
+        <th colspan="4">1 ADULT</th>
+        <th colspan="4">2 ADULTS<p>(1 WORKING)</p></th> 
+        <th colspan="4">2 ADULTS<p>(BOTH WORKING)</p></th>
+      </tr>
+    </thead>
+    <thead>
+      <tr>
+        <td class="blank_cell"> </td>
+        <td><b>0&nbsp;Children</b></td>
+        <td><b>1&nbsp;Child</b></td> 
+        <td><b>2&nbsp;Children</b></td>
+        <td><b>3&nbsp;Children</b></td>
+
+        <td><b>0&nbsp;Children</b></td>
+        <td><b>1&nbsp;Child</b></td> 
+        <td><b>2&nbsp;Children</b></td>
+        <td><b>3&nbsp;Children</b></td>
+
+        <td><b>0&nbsp;Children</b></td>
+        <td><b>1&nbsp;Child</b></td> 
+        <td><b>2&nbsp;Children</b></td>
+        <td><b>3&nbsp;Children</b></td>
+      </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td class="text">Food</td>
+      <td>
+        $4,749
+      </td>
+      <td>
+        $6,984
+      </td>
+      <td>
+        $10,462
+      </td>
+      <td>
+        $13,918
+      </td>
+      <td>
+        $8,707
+      </td>
+      <td>
+        $10,822
+      </td>
+      <td>
+        $13,921
+      </td>
+      <td>
+        $16,982
+      </td>
+      <td>
+        $8,707
+      </td>
+      <td>
+        $10,822
+      </td>
+      <td>
+        $13,921
+      </td>
+      <td>
+        $16,982
+      </td>
+  </tr>
+  <tr class="even">
+    <td class="text">Child Care</td>
+      <td>
+        $0
+      </td>
+      <td>
+        $18,855
+      </td>
+      <td>
+        $34,294
+      </td>
+      <td>
+        $39,744
+      </td>
+      <td>
+        $0
+      </td>
+      <td>
+        $0
+      </td>
+      <td>
+        $0
+      </td>
+      <td>
+        $0
+      </td>
+      <td>
+        $0
+      </td>
+      <td>
+        $18,855
+      </td>
+      <td>
+        $34,294
+      </td>
+      <td>
+        $39,744
+      </td>
+  </tr>
+  <tr class="odd">
+    <td class="text">Medical</td>
+      <td>
+        $2,509
+      </td>
+      <td>
+        $6,189
+      </td>
+      <td>
+        $6,262
+      </td>
+      <td>
+        $6,339
+      </td>
+      <td>
+        $5,470
+      </td>
+      <td>
+        $7,156
+      </td>
+      <td>
+        $7,430
+      </td>
+      <td>
+        $7,733
+      </td>
+      <td>
+        $5,470
+      </td>
+      <td>
+        $7,156
+      </td>
+      <td>
+        $7,430
+      </td>
+      <td>
+        $7,733
+      </td>
+  </tr>
+  <tr class="even">
+    <td class="text">Housing</td>
+      <td>
+        $19,618
+      </td>
+      <td>
+        $24,064
+      </td>
+      <td>
+        $24,064
+      </td>
+      <td>
+        $33,006
+      </td>
+      <td>
+        $21,088
+      </td>
+      <td>
+        $24,064
+      </td>
+      <td>
+        $24,064
+      </td>
+      <td>
+        $33,006
+      </td>
+      <td>
+        $21,088
+      </td>
+      <td>
+        $24,064
+      </td>
+      <td>
+        $24,064
+      </td>
+      <td>
+        $33,006
+      </td>
+  </tr>
+  <tr class="odd">
+    <td class="text">Transportation</td>
+      <td>
+        $9,640
+      </td>
+      <td>
+        $11,156
+      </td>
+      <td>
+        $14,052
+      </td>
+      <td>
+        $16,169
+      </td>
+      <td>
+        $11,156
+      </td>
+      <td>
+        $14,052
+      </td>
+      <td>
+        $16,169
+      </td>
+      <td>
+        $17,937
+      </td>
+      <td>
+        $11,156
+      </td>
+      <td>
+        $14,052
+      </td>
+      <td>
+        $16,169
+      </td>
+      <td>
+        $17,937
+      </td>
+  </tr>
+  <tr class="even">
+    <td class="text">Civic</td>
+      <td>
+        $3,587
+      </td>
+      <td>
+        $6,314
+      </td>
+      <td>
+        $6,971
+      </td>
+      <td>
+        $8,938
+      </td>
+      <td>
+        $6,314
+      </td>
+      <td>
+        $6,971
+      </td>
+      <td>
+        $8,938
+      </td>
+      <td>
+        $9,915
+      </td>
+      <td>
+        $6,314
+      </td>
+      <td>
+        $6,971
+      </td>
+      <td>
+        $8,938
+      </td>
+      <td>
+        $9,915
+      </td>
+  </tr>
+  <tr class="odd">
+    <td class="text">Internet &amp; Mobile</td>
+      <td>
+        $2,159
+      </td>
+      <td>
+        $2,159
+      </td>
+      <td>
+        $2,159
+      </td>
+      <td>
+        $2,159
+      </td>
+      <td>
+        $2,765
+      </td>
+      <td>
+        $2,765
+      </td>
+      <td>
+        $2,765
+      </td>
+      <td>
+        $2,765
+      </td>
+      <td>
+        $2,765
+      </td>
+      <td>
+        $2,765
+      </td>
+      <td>
+        $2,765
+      </td>
+      <td>
+        $2,765
+      </td>
+  </tr>
+  <tr class="even">
+    <td class="text">Other</td>
+      <td>
+        $4,749
+      </td>
+      <td>
+        $9,123
+      </td>
+      <td>
+        $9,558
+      </td>
+      <td>
+        $11,490
+      </td>
+      <td>
+        $9,123
+      </td>
+      <td>
+        $10,121
+      </td>
+      <td>
+        $11,490
+      </td>
+      <td>
+        $12,746
+      </td>
+      <td>
+        $9,123
+      </td>
+      <td>
+        $10,121
+      </td>
+      <td>
+        $11,490
+      </td>
+      <td>
+        $12,746
+      </td>
+  </tr>
+  <tr class="odd">
+    <td class="text">Required annual income after taxes</td>
+      <td>
+        $47,010
+      </td>
+      <td>
+        $84,844
+      </td>
+      <td>
+        $107,822
+      </td>
+      <td>
+        $131,762
+      </td>
+      <td>
+        $64,622
+      </td>
+      <td>
+        $75,951
+      </td>
+      <td>
+        $84,777
+      </td>
+      <td>
+        $101,083
+      </td>
+      <td>
+        $64,622
+      </td>
+      <td>
+        $94,806
+      </td>
+      <td>
+        $119,070
+      </td>
+      <td>
+        $140,828
+      </td>
+  </tr>
+  <tr class="even">
+    <td class="text">Annual taxes</td>
+      <td>
+        $10,127
+      </td>
+      <td>
+        $17,112
+      </td>
+      <td>
+        $22,836
+      </td>
+      <td>
+        $30,032
+      </td>
+      <td>
+        $12,419
+      </td>
+      <td>
+        $13,299
+      </td>
+      <td>
+        $13,550
+      </td>
+      <td>
+        $15,795
+      </td>
+      <td>
+        $12,419
+      </td>
+      <td>
+        $17,823
+      </td>
+      <td>
+        $22,401
+      </td>
+      <td>
+        $28,219
+      </td>
+  </tr>
+  <tr class="odd results">
+    <td class="text">Required annual income before taxes</td>
+      <td>
+        $57,137
+      </td>
+      <td>
+        $101,957
+      </td>
+      <td>
+        $130,658
+      </td>
+      <td>
+        $161,794
+      </td>
+      <td>
+        $77,041
+      </td>
+      <td>
+        $89,250
+      </td>
+      <td>
+        $98,327
+      </td>
+      <td>
+        $116,878
+      </td>
+      <td>
+        $77,041
+      </td>
+      <td>
+        $112,630
+      </td>
+      <td>
+        $141,472
+      </td>
+      <td>
+        $169,047
+      </td>
+  </tr>
+    </tbody>
+  </table>
+</div>
+
+
+
+
+  <h2 class="page_title">Typical Annual Salaries</h2>
+  <p>
+    The average annual salaries for various occupations in the table below comes from the latest state-level data from the Bureau of Labor Statistics’ <a href="https://www.bls.gov/oes/tables.htm" target="_blank">Occupational Employment and Wage Estimates</a>. When available, this data is specific to a given metro area.
+  </p>
+  <div class="table-responsive table_wrap">
+    <table class="results_table table-striped salary_table occupations">
+      <thead>
+        <tr>
+          <th colspan="1">Occupational Area</th>
+          <th colspan="1">Typical Annual Salary</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="even">
+            <td class="text">
+              Management
+            </td>
+            <td class="black annual_salary">
+              $137,680
+            </td>
+          </tr>
+          <tr class="odd">
+            <td class="text">
+              Business &amp; Financial Operations
+            </td>
+            <td class="red annual_salary">
+              $88,160
+            </td>
+          </tr>
+          <tr class="even">
+            <td class="text">
+              Computer &amp; Mathematical
+            </td>
+            <td class="black annual_salary">
+              $114,550
+            </td>
+          </tr>
+          <tr class="odd">
+            <td class="text">
+              Architecture &amp; Engineering
+            </td>
+            <td class="black annual_salary">
+              $108,520
+            </td>
+          </tr>
+          <tr class="even">
+            <td class="text">
+              Life, Physical, &amp; Social Science
+            </td>
+            <td class="red annual_salary">
+              $85,030
+            </td>
+          </tr>
+          <tr class="odd">
+            <td class="text">
+              Community &amp; Social Service
+            </td>
+            <td class="red annual_salary">
+              $63,530
+            </td>
+          </tr>
+          <tr class="even">
+            <td class="text">
+              Legal
+            </td>
+            <td class="black annual_salary">
+              $123,070
+            </td>
+          </tr>
+          <tr class="odd">
+            <td class="text">
+              Education, Training, &amp; Library
+            </td>
+            <td class="red annual_salary">
+              $78,210
+            </td>
+          </tr>
+          <tr class="even">
+            <td class="text">
+              Arts, Design, Entertainment, Sports, &amp; Media
+            </td>
+            <td class="red annual_salary">
+              $78,520
+            </td>
+          </tr>
+          <tr class="odd">
+            <td class="text">
+              Healthcare Practitioners &amp; Technical
+            </td>
+            <td class="black annual_salary">
+              $128,480
+            </td>
+          </tr>
+          <tr class="even">
+            <td class="text">
+              Healthcare Support
+            </td>
+            <td class="red annual_salary">
+              $47,450
+            </td>
+          </tr>
+          <tr class="odd">
+            <td class="text">
+              Protective Service
+            </td>
+            <td class="red annual_salary">
+              $63,200
+            </td>
+          </tr>
+          <tr class="even">
+            <td class="text">
+              Food Preparation &amp; Serving Related
+            </td>
+            <td class="red annual_salary">
+              $38,160
+            </td>
+          </tr>
+          <tr class="odd">
+            <td class="text">
+              Building &amp; Grounds Cleaning &amp; Maintenance
+            </td>
+            <td class="red annual_salary">
+              $42,750
+            </td>
+          </tr>
+          <tr class="even">
+            <td class="text">
+              Personal Care &amp; Service
+            </td>
+            <td class="red annual_salary">
+              $43,260
+            </td>
+          </tr>
+          <tr class="odd">
+            <td class="text">
+              Sales &amp; Related
+            </td>
+            <td class="red annual_salary">
+              $56,070
+            </td>
+          </tr>
+          <tr class="even">
+            <td class="text">
+              Office &amp; Administrative Support
+            </td>
+            <td class="red annual_salary">
+              $51,300
+            </td>
+          </tr>
+          <tr class="odd">
+            <td class="text">
+              Farming, Fishing, &amp; Forestry
+            </td>
+            <td class="red annual_salary">
+              $43,980
+            </td>
+          </tr>
+          <tr class="even">
+            <td class="text">
+              Construction &amp; Extraction
+            </td>
+            <td class="red annual_salary">
+              $74,770
+            </td>
+          </tr>
+          <tr class="odd">
+            <td class="text">
+              Installation, Maintenance, &amp; Repair
+            </td>
+            <td class="red annual_salary">
+              $64,960
+            </td>
+          </tr>
+          <tr class="even">
+            <td class="text">
+              Production
+            </td>
+            <td class="red annual_salary">
+              $51,750
+            </td>
+          </tr>
+          <tr class="odd">
+            <td class="text">
+              Transportation &amp; Material Moving
+            </td>
+            <td class="red annual_salary">
+              $49,110
+            </td>
+          </tr>
+        </tbody>
+    </table>
+  </div>
+</div>
+
+  </div>
+
+  <div id="footer" class="footer">
+    <div class="partners">
+      <div class="partner_thank_you">
+       Supporters
+      </div>
+      <span>
+        <a target="_blank" href="https://www.livingwage.institute/"><img class="partner_logo" src="/assets/lwi-logo-a2dc4f292a093ece74f07d8b4bc2d7df0657c11e417413cfa055841cc4d1476c.png" /></a>
+      </span>
+      <span>
+        <a target="_blank" href="https://www.ridewithloop.com/"><img class="partner_logo" src="/assets/loop-logo-53dec4932eeafada31d8efdaa753b2f4b1c10b5d93be28f07154b4129068aa9b.png" /></a>
+      </span>
+      <span>
+        <a target="_blank" href="https://www.linkedin.com/company/translational-research-service/"><img class="partner_logo" src="/assets/trs-logo-75fa0dd99523252eef2b76a92c71fe681e0a380b0ef007eea63c48d99c9afdac.png" /></a>
+      </span>
+      <span>
+        <a target="_blank" href="https://www.westarete.com"><img class="partner_logo" src="/assets/westarete_logo-6858ee41458759b4dcf5fdbdf34da868dc53966f7775659a87347b9e80707d7b.png" /></a>
+      </span>
+      <div class="data-warning">
+        Please <strong>do not scrape the data</strong>. For further information on the Calculator’s history and design, please visit the <a href="/pages/faqs">FAQs</a> and <a href="/pages/methodology">Methodology</a> pages. 
+        <br>If you are interested in licensing the data found on this website, please reach out directly via the <a href="https://www.livingwage.institute/contact-lwc" target="_blank"><strong>contact form</strong></a>. 
+      </div>
+    </div>
+    <div id="copyright">
+      <p>
+        &copy;
+        2026
+        <a target="_blank" href="https://dusp.mit.edu/people/amy-glasmeier">Dr. Amy K. Glasmeier</a>
+        and the
+        <a target="_blank" href="https://web.mit.edu/">Massachusetts Institute of Technology</a>
+        <br>
+        <a target="_blank" href="https://accessibility.mit.edu/">Accessibility</a>
+      </p>
+    </div>
+    <div id="metadata">
+      Build date:   2025-09-16<br>  
+      Git commit:   18fc886<br>
+      Data file:    92ee2a1
+    </div>
+  </div>
+
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-183G0JWBTC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-183G0JWBTC');
+</script>
+
+  </body>
+</html>
