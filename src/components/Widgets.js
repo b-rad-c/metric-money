@@ -162,53 +162,70 @@ return (
                     </td>
                 </tr>
                 <tr>
-                    <td><strong>car</strong></td>
+                    <td><strong>transportation</strong></td>
                     <td>
                         <Stack className='justify-content-center' direction='horizontal' gap={stackGap}>
-                            <Button size='sm' onClick={() => { costHandler('carCost', -25) }}>-</Button>
-                            <span style={costStyle}>{formatUSD(props.state.carCost)}</span>
-                            <Button size='sm' onClick={() => { costHandler('carCost', 25) }}>+</Button>
+                            <Button size='sm' onClick={() => { costHandler('transportationCost', -25) }}>-</Button>
+                            <span style={costStyle}>{formatUSD(props.state.transportationCost)}</span>
+                            <Button size='sm' onClick={() => { costHandler('transportationCost', 25) }}>+</Button>
                         </Stack>
                     </td>
                     <td>
                         <Stack className='justify-content-center' direction='horizontal' gap={stackGap}>
-                            <Button size='sm' disabled={disableDue} onClick={() => { dueHandler('carDue', -1) }}>-</Button>
-                            <span style={dateStyle}>{formatOrdinal(props.state.carDue)}</span>
-                            <Button size='sm' disabled={disableDue} onClick={() => { dueHandler('carDue', 1) }}>+</Button>
-                        </Stack>
-                    </td>
-                </tr>
-                <tr>
-                    <td><strong>electric</strong></td>
-                    <td>
-                        <Stack className='justify-content-center' direction='horizontal' gap={stackGap}>
-                            <Button size='sm' onClick={() => { costHandler('electricCost', -15) }}>-</Button>
-                            <span style={costStyle}>{formatUSD(props.state.electricCost)}</span>
-                            <Button size='sm' onClick={() => { costHandler('electricCost', 15) }}>+</Button>
-                        </Stack>
-                    </td>
-                    <td>
-                        <Stack className='justify-content-center' direction='horizontal' gap={stackGap}>
-                            <Button size='sm' disabled={disableDue} onClick={() => { dueHandler('electricDue', -1) }}>-</Button>
-                            <span style={dateStyle}>{formatOrdinal(props.state.electricDue)}</span>
-                            <Button size='sm' disabled={disableDue} onClick={() => { dueHandler('electricDue', 1) }}>+</Button>
+                            <Button size='sm' disabled={disableDue} onClick={() => { dueHandler('transportationDue', -1) }}>-</Button>
+                            <span style={dateStyle}>{formatOrdinal(props.state.transportationDue)}</span>
+                            <Button size='sm' disabled={disableDue} onClick={() => { dueHandler('transportationDue', 1) }}>+</Button>
                         </Stack>
                     </td>
                 </tr>
                 <tr>
-                    <td><strong>water</strong></td>
+                    <td><strong>medical</strong></td>
                     <td>
                         <Stack className='justify-content-center' direction='horizontal' gap={stackGap}>
-                            <Button size='sm' onClick={() => { costHandler('waterCost', -15) }}>-</Button>
-                            <span style={costStyle}>{formatUSD(props.state.waterCost)}</span>
-                            <Button size='sm' onClick={() => { costHandler('waterCost', 15) }}>+</Button>
+                            <Button size='sm' onClick={() => { costHandler('medicalCost', -25) }}>-</Button>
+                            <span style={costStyle}>{formatUSD(props.state.medicalCost)}</span>
+                            <Button size='sm' onClick={() => { costHandler('medicalCost', 25) }}>+</Button>
                         </Stack>
                     </td>
                     <td>
                         <Stack className='justify-content-center' direction='horizontal' gap={stackGap}>
-                            <Button size='sm' disabled={disableDue} onClick={() => { dueHandler('waterDue', -1) }}>-</Button>
-                            <span style={dateStyle}>{formatOrdinal(props.state.waterDue)}</span>
-                            <Button size='sm' disabled={disableDue} onClick={() => { dueHandler('waterDue', 1) }}>+</Button>
+                            <Button size='sm' disabled={disableDue} onClick={() => { dueHandler('medicalDue', -1) }}>-</Button>
+                            <span style={dateStyle}>{formatOrdinal(props.state.medicalDue)}</span>
+                            <Button size='sm' disabled={disableDue} onClick={() => { dueHandler('medicalDue', 1) }}>+</Button>
+                        </Stack>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>child care</strong></td>
+                    <td>
+                        <Stack className='justify-content-center' direction='horizontal' gap={stackGap}>
+                            <Button size='sm' onClick={() => { costHandler('childCareCost', -50) }}>-</Button>
+                            <span style={costStyle}>{formatUSD(props.state.childCareCost)}</span>
+                            <Button size='sm' onClick={() => { costHandler('childCareCost', 50) }}>+</Button>
+                        </Stack>
+                    </td>
+                    <td>
+                        <Stack className='justify-content-center' direction='horizontal' gap={stackGap}>
+                            <Button size='sm' disabled={disableDue} onClick={() => { dueHandler('childCareDue', -1) }}>-</Button>
+                            <span style={dateStyle}>{formatOrdinal(props.state.childCareDue)}</span>
+                            <Button size='sm' disabled={disableDue} onClick={() => { dueHandler('childCareDue', 1) }}>+</Button>
+                        </Stack>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>internet and mobile</strong></td>
+                    <td>
+                        <Stack className='justify-content-center' direction='horizontal' gap={stackGap}>
+                            <Button size='sm' onClick={() => { costHandler('internetMobileCost', -15) }}>-</Button>
+                            <span style={costStyle}>{formatUSD(props.state.internetMobileCost)}</span>
+                            <Button size='sm' onClick={() => { costHandler('internetMobileCost', 15) }}>+</Button>
+                        </Stack>
+                    </td>
+                    <td>
+                        <Stack className='justify-content-center' direction='horizontal' gap={stackGap}>
+                            <Button size='sm' disabled={disableDue} onClick={() => { dueHandler('internetMobileDue', -1) }}>-</Button>
+                            <span style={dateStyle}>{formatOrdinal(props.state.internetMobileDue)}</span>
+                            <Button size='sm' disabled={disableDue} onClick={() => { dueHandler('internetMobileDue', 1) }}>+</Button>
                         </Stack>
                     </td>
                 </tr>
