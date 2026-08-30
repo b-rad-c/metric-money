@@ -2,12 +2,12 @@ import argparse
 
 from metricmoney.parsing import parse_metro_38900
 from metricmoney.shared import pprint_json
-from metricmoney.visualize import hello_graph
+from metricmoney.visualize import hello_graph, hello_calendar, hello_time_series
 
 
 def main():
     parser = argparse.ArgumentParser(description="Metric Money CLI")
-    parser.add_argument('mode', choices=['data', 'family-types', 'hello-graph'])
+    parser.add_argument('mode', choices=['data', 'family-types', 'hello-graph', 'hello-calendar', 'hello-time-series'])
     parser.add_argument('--family-type', '-ft', help="Specify the family type, use 'family-types' mode to see available options")
     args = parser.parse_args()
 
@@ -28,6 +28,10 @@ def main():
         case 'hello-graph':
             
             hello_graph('dist/hello_graph.png')
+        case 'hello-calendar':
+            hello_calendar('dist/hello_calendar.png')
+        case 'hello-time-series':
+            hello_time_series('dist/hello_time_series.png')
         case _:
             print(f'invalid mode: {args.mode}')
             
