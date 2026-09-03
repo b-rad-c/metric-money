@@ -42,6 +42,38 @@ def hello_calendar(output_path: str):
 	plt.savefig(output_path, dpi=300, bbox_inches='tight')
 	plt.close()
 
+def hello_savings(output_path: str):
+	"""Create a graph of a savings account with biweekly $100 deposits."""
+	start_date = datetime(2026, 1, 2)
+	end_date = datetime(2026, 12, 31)
+	payday = datetime(2026, 1, 2)
+	dates = [start_date]
+	balances = [0]
+	balance = 0
+
+	while payday <= end_date:
+		payday += timedelta(days=14)
+		
+		balance += 100
+		dates.append(payday)
+		balances.append(balance)
+		
+
+	fig, ax = plt.subplots(figsize=(16, 5))
+	ax.plot(dates, balances, marker='o', color='g', label='Savings Balance')
+	ax.set_title('Savings Account Growth')
+	ax.set_xlabel('Date')
+	ax.set_ylabel('Value')
+	ax.set_xticks(dates)
+	ax.xaxis.set_major_formatter(mdates.DateFormatter('%m/%d'))
+	ax.legend()
+	fig.autofmt_xdate(rotation=45, ha='right')
+	fig.tight_layout()
+
+	os.makedirs(os.path.dirname(output_path), exist_ok=True)
+	fig.savefig(output_path, dpi=300, bbox_inches='tight')
+	plt.close(fig)
+
 def hello_time_series(output_path: str):
 
 	
