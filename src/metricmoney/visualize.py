@@ -42,8 +42,14 @@ def hello_calendar(output_path: str):
 	plt.savefig(output_path, dpi=300, bbox_inches='tight')
 	plt.close()
 
-def hello_savings(output_path: str, hide_balance: bool = False):
+def hello_savings(output_path: str, **kwargs):
 	"""Create a graph of a savings account with biweekly $100 deposits."""
+
+	show_balance_line = kwargs.get('show_balance_line', True)
+	pay_day_dot = kwargs.get('pay_day_dot', True)
+	pay_day_lines = kwargs.get('pay_day_lines', True)
+	month_lines = kwargs.get('month_lines', True)
+
 	start_date = datetime(2026, 1, 2)
 	end_date = datetime(2026, 12, 31)
 	payday = datetime(2026, 1, 2)
@@ -60,19 +66,22 @@ def hello_savings(output_path: str, hide_balance: bool = False):
 		
 
 	fig, ax = plt.subplots(figsize=(16, 5))
-	ax.plot(dates, balances, marker=',', color='g', label='Savings Balance', alpha=0.0 if hide_balance else 1.0)
+	balances_marker = '.' if pay_day_dot else None
+	ax.plot(dates, balances, marker=balances_marker, color='g', label='Savings Balance', alpha=1.0 if show_balance_line else 0.0)
 	month_starts = [datetime(2026, month, 1) for month in range(1, 13)]
 	for month_start in month_starts:
-		ax.axvline(month_start, color='black', linestyle='solid', linewidth=0.8, alpha=0.8)
+		if month_lines:
+			ax.axvline(month_start, color='black', linestyle='solid', linewidth=0.8, alpha=0.8)
 	for payday in dates[1:]:
-		ax.axvline(payday, color='green', linestyle='--', linewidth=0.7, alpha=0.8)
+		if pay_day_lines:
+			ax.axvline(payday, color='green', linestyle='--', linewidth=0.7, alpha=0.8)
 	ax.set_title('Savings Account Growth')
 	ax.set_xlabel('Date')
 	ax.set_ylabel('Value')
 	ax.set_xticks(dates)
-	ax.xaxis.set_major_formatter(mdates.DateFormatter('%m/%d'))
+	ax.xaxis.set_major_formatter(mdates.DateFormatter('%b %d'))
 	ax.legend()
-	fig.autofmt_xdate(rotation=45, ha='right')
+	fig.autofmt_xdate(rotation=55, ha='right')
 	fig.tight_layout()
 
 	os.makedirs(os.path.dirname(output_path), exist_ok=True)
