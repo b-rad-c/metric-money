@@ -42,7 +42,7 @@ def hello_calendar(output_path: str):
 	plt.savefig(output_path, dpi=300, bbox_inches='tight')
 	plt.close()
 
-def hello_savings(output_path: str):
+def hello_savings(output_path: str, hide_balance: bool = False):
 	"""Create a graph of a savings account with biweekly $100 deposits."""
 	start_date = datetime(2026, 1, 2)
 	end_date = datetime(2026, 12, 31)
@@ -60,7 +60,12 @@ def hello_savings(output_path: str):
 		
 
 	fig, ax = plt.subplots(figsize=(16, 5))
-	ax.plot(dates, balances, marker='o', color='g', label='Savings Balance')
+	ax.plot(dates, balances, marker=',', color='g', label='Savings Balance', alpha=0.0 if hide_balance else 1.0)
+	month_starts = [datetime(2026, month, 1) for month in range(1, 13)]
+	for month_start in month_starts:
+		ax.axvline(month_start, color='black', linestyle='solid', linewidth=0.8, alpha=0.8)
+	for payday in dates[1:]:
+		ax.axvline(payday, color='green', linestyle='--', linewidth=0.7, alpha=0.8)
 	ax.set_title('Savings Account Growth')
 	ax.set_xlabel('Date')
 	ax.set_ylabel('Value')
